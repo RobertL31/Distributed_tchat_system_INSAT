@@ -1,0 +1,7 @@
+package localApp;
+
+public class LocalSystem {
+	
+	public static int PORT_CONFIG = 65533; // To be chosen at launch
+
+}

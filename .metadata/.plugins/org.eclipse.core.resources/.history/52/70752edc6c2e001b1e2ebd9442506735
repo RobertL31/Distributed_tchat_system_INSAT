@@ -1,0 +1,18 @@
+package localApp;
+
+public class LocalSystemConfig {
+	
+	public static final int START_PORT = 65000;
+	public static final int END_PORT = 65200;
+	public static int PORT_NUMBER = 0; // To be chosen at launch
+
+	
+	public static int choose_port() {
+		
+		
+		
+	}
+	
+	
+	
+}

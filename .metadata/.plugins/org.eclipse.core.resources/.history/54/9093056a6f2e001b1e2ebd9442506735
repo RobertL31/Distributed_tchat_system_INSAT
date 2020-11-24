@@ -1,0 +1,36 @@
+package localApp;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
+public class LocalSystemConfig {
+	
+	public static final int START_PORT = 65000;
+	public static final int END_PORT = 65500;
+	
+	private static ServerSocket m_TCP_socket = null;
+	
+	
+	public static void openServer() {
+		
+		for(int i = START_PORT; i <= END_PORT; ++i) {
+			
+			try {
+				m_TCP_socket = new ServerSocket(i);
+				break;
+				
+			} catch (IOException e) {}
+		}
+	}
+
+
+	
+	public static int get_TCP_port() {
+		return m_TCP_socket.getLocalPort();
+	}
+
+	
+	
+	
+	
+}

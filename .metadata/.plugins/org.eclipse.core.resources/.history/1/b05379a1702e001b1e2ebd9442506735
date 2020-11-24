@@ -1,0 +1,21 @@
+package Test;
+
+import java.util.Scanner;
+
+import localApp.LocalSystemConfig;
+
+public class MainClass {
+
+	public static void main(String[] args) {
+		
+		LocalSystemConfig.openTCPServer();
+		System.out.println(LocalSystemConfig.get_TCP_port());
+		
+		Scanner s = new Scanner(System.in);
+		string t = s.next();
+		
+		if()
+		
+	}
+
+}

@@ -1,0 +1,7 @@
+package localApp;
+
+public class LocalSystem {
+	
+	public static final int port_number = 65533;
+
+}
