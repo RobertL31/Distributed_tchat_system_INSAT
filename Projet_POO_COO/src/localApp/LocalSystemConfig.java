@@ -1,6 +1,7 @@
 package localApp;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
 public final class LocalSystemConfig {
@@ -12,17 +13,17 @@ public final class LocalSystemConfig {
 	public static final int START_PORT = 65040;
 	public static final int END_PORT = 65050;
 	
-	public static ServerSocket m_TCP_socket = null;
+	public static DatagramSocket m_UDP_socket = null;
 	
 	
 	
 	
-	public static void openTCPServer() {
+	public static void openUDPServer() {
 		
 		for(int i = START_PORT; i <= END_PORT; ++i) {
 			
 			try {
-				m_TCP_socket = new ServerSocket(i);
+				m_UDP_socket = new DatagramSocket(i);
 				break;
 				
 			} catch (IOException e) {}
@@ -31,8 +32,8 @@ public final class LocalSystemConfig {
 
 
 	
-	public static int get_TCP_port() {
-		return m_TCP_socket.getLocalPort();
+	public static int get_UDP_port() {
+		return m_UDP_socket.getLocalPort();
 	}
 
 	

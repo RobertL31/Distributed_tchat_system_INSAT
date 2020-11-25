@@ -1,10 +1,17 @@
 package Test;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import localApp.LocalSystemConfig;
@@ -13,22 +20,22 @@ public class MainClass {
 
 	public static void main(String[] args) {
 		
-		LocalSystemConfig.openTCPServer();
-		System.out.println(LocalSystemConfig.get_TCP_port());
+		LocalSystemConfig.openUDPServer();
+		System.out.println(LocalSystemConfig.get_UDP_port());
 		
 		Scanner s = new Scanner(System.in);
 		String t = s.next();
 		
 		if(t.equals("receive")) {
 			
-			Socket link;
+			DatagramSocket link;
 			try {
-				link = LocalSystemConfig.m_TCP_socket.accept();
-			
-				PrintWriter out = new PrintWriter(link.getOutputStream(),true);
-				
-				out.print("connected");
-				out.flush();
+				byte[] b0 = new byte[256];
+				DatagramPacket p0 = new DatagramPacket(b0, b0.length);
+				link = LocalSystemConfig.m_UDP_socket;
+				link.receive(p0);
+				String s0 = new String(p0.getData(), StandardCharsets.UTF_8);
+				System.out.println("Port src = " + p0.getPort() + "link port = " + link.getPort());
 				
 			} catch (IOException e) {
 				
@@ -45,13 +52,14 @@ public class MainClass {
 				System.out.print("Emission sur le port " + i + " : ");
 				
 				try {
-					Socket link = new Socket("localhost",LocalSystemConfig.get_TCP_port());
+					DatagramSocket link = LocalSystemConfig.m_UDP_socket;
+					byte[] b1 = "coucou".getBytes();
 					
-					BufferedReader buff = new BufferedReader(new InputStreamReader(link.getInputStream()));
+					DatagramPacket p1 = new DatagramPacket(b1, b1.length, InetAddress.getLocalHost(), i);
 					
-					if(buff.readLine().equals("connected")) {
-						System.out.println("CONNECTED");
-					}
+					link.send(p1);
+					
+					System.out.println("Paquet envoyé !");
 					
 				} catch (IOException e) {
 					System.out.println("PAS DE REPONSE");
