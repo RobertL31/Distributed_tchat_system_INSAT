@@ -1,7 +1,0 @@
-package localApp;
-
-public class LocalSystem {
-	
-	public static int port_number = 0; // To be chosen at launch
-
-}

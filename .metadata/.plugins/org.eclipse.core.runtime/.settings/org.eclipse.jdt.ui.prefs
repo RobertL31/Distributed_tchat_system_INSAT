@@ -1,7 +1,0 @@
-content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="distantApp.Network_Sender"><rhs name\="distantApp.Network_Sender"/></lhs><lhs name\="distantApp.Network_receiver"><rhs name\="distantApp.Network_receiver"/></lhs><lhs name\="java.lang.Exception"><rhs name\="java.io.IOException"/></lhs><lhs name\="java.lang.Throwable"><rhs name\="java.io.IOException"/></lhs><lhs name\="java.io.IOException"><rhs name\="java.io.IOException"/></lhs></history>
-content_assist_number_of_computers=12
-eclipse.preferences.version=1
-org.eclipse.jdt.ui.formatterprofiles.version=19
-spelling_locale_initialized=true
-useAnnotationsPrefPage=true
-useQuickDiffPrefPage=true
