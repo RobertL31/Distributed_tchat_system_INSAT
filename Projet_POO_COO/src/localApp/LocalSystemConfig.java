@@ -8,10 +8,12 @@ public final class LocalSystemConfig {
 	
 	
 	/* Configuration class, no constructor has to be built*/
-	
+	public static final String UNKNOWN_USERNAME = "/uknw";
 	
 	public static final int START_PORT = 65040;
 	public static final int END_PORT = 65050;
+	
+	public static final int UDP_MESSAGE_MAXLENGTH = 256;
 	
 	public static DatagramSocket m_UDP_socket = null;
 	
