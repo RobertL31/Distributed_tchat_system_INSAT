@@ -1,3 +1,4 @@
+import java.sql.Time;
 import java.util.Scanner;
 
 import distantApp.NetworkManager;
@@ -10,8 +11,18 @@ public class MainApplication {
 		Scanner input = new Scanner(System.in);
 		
 		System.out.println("[UDP] Listening on " + LocalSystemConfig.get_UDP_port());
+		System.out.println("[TCP] Listening on " + LocalSystemConfig.get_TCP_port());
 		
 		Client.discoverNetwork();
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(Client.getM_IP_Pseudo_Table().toString());
 		
 		
 				

@@ -19,7 +19,7 @@ import localApp.LocalSystemConfig;
 public class MainClass {
 
 	public static void main(String[] args) {
-		
+		 /*
 		LocalSystemConfig.openUDPServer();
 		System.out.println(LocalSystemConfig.get_UDP_port());
 		
@@ -47,7 +47,7 @@ public class MainClass {
 		}
 		
 		if(t.equals("send")) {
-			for(int i=LocalSystemConfig.START_PORT; i <= LocalSystemConfig.END_PORT; ++i) {
+			for(int i=LocalSystemConfig.START_UDP_PORT; i <= LocalSystemConfig.END_UDP_PORT; ++i) {
 				
 				System.out.print("Emission sur le port " + i + " : ");
 				
@@ -68,7 +68,7 @@ public class MainClass {
 		}
 	
 		
-		
+		*/
 		
 		
 	}

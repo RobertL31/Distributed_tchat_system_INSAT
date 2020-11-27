@@ -18,6 +18,7 @@ public class NetworkManager {
 
 		//Open a listening UDP port
 		LocalSystemConfig.openUDPServer();
+		LocalSystemConfig.openTCPServer();
 
 		this.m_IP_Pseudo_Table = new HashMap<Integer, String>();
 		this.m_sender = new Network_Sender();
@@ -40,13 +41,14 @@ public class NetworkManager {
 	public void discoverNetwork() {
 		//Launch receiver thread
 		initReceiver_UDP();
-
+		
 		//Send a UDP datagram to notify all the network
+		String msg = MessageCode.NOTIFY_JOIN;
 		for(int i=LocalSystemConfig.START_PORT; i<=LocalSystemConfig.END_PORT; ++i) {
 			if(i != LocalSystemConfig.get_UDP_port()) {
 				try {
 					System.out.println("Send UDP to " + i);
-					m_sender.send(Network_Sender.createUDPDatagram(MessageCode.NOTIFY_JOIN, i));
+					m_sender.send(Network_Sender.createUDPDatagram(msg, i));
 				} catch (IOException e) {
 					System.err.println("Cannot send UDP datagram to " + i);
 				}

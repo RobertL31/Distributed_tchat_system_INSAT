@@ -36,28 +36,33 @@ public class Network_receiver_UDP extends Thread{
 		}
 		String message = new String(recv.getData(), StandardCharsets.UTF_8);
 		int srcPort  = recv.getPort(); 
+		
+		// Remove unused bytes (because buffer size >= data transmitted size)
+		message = message.substring(0, recv.getLength());
+		
 		return new Pair<String, Integer>(message, srcPort);
 	}
 	
 	public void processMessage(Pair<String, Integer> recepted) {
 		String msg = recepted.getFirst();
-		int port = recepted.getSecond();
+		int srcPort = recepted.getSecond();
 		
 		if(msg.startsWith(MessageCode.NOTIFY_JOIN)) {
-			//New connection, add port to HashMap and send answer
-			if(!Client.getM_IP_Pseudo_Table().containsKey(port)) {
-				Client.getM_IP_Pseudo_Table().put(port, LocalSystemConfig.UNKNOWN_USERNAME);
+			String respMsg = MessageCode.NOTIFY_JOIN + (LocalSystemConfig.get_TCP_port());
+			//New connection, add TCP port to HashMap and send answer
+			if(!Client.getM_IP_Pseudo_Table().containsKey(srcPort)) {
+				Client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 				try {
-					Client.getM_sender().send(Network_Sender.createUDPDatagram(MessageCode.NOTIFY_JOIN, port));
+					Client.getM_sender().send(Network_Sender.createUDPDatagram(respMsg, srcPort));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		else if (msg.startsWith(MessageCode.NOTIFY_LEAVE)) {
-			Client.getM_IP_Pseudo_Table().remove(port);
-		}
+		/*TODO later: deconnect
+		 *  else if ....
+		} */
 	}
 	
 	
@@ -66,7 +71,6 @@ public class Network_receiver_UDP extends Thread{
 		while(true) {
 			Pair<String, Integer> recepted = receive();
 			processMessage(recepted);
-			System.out.println(Client.getM_IP_Pseudo_Table().toString());
 		}
 	}
 }
