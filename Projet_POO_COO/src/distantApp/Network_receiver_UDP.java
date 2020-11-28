@@ -3,6 +3,8 @@ package distantApp;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.util.ArrayList;
@@ -15,11 +17,11 @@ import tools.Pair;
 public class Network_receiver_UDP extends Thread{
 	
 	private DatagramSocket m_UDP_socket;
-	private NetworkManager Client;
+	private NetworkManager client;
 	
-	public Network_receiver_UDP(NetworkManager Client) {
+	public Network_receiver_UDP(NetworkManager client) {
 		this.m_UDP_socket = LocalSystemConfig.m_UDP_socket;
-		this.Client = Client;
+		this.client = client;
 	}
 	
 	/**
@@ -49,18 +51,28 @@ public class Network_receiver_UDP extends Thread{
 		
 		if(msg.startsWith(MessageCode.NOTIFY_JOIN)) {
 			String respMsg = MessageCode.NOTIFY_JOIN + (LocalSystemConfig.get_TCP_port());
+			//for TCP communications//
+			Socket sock;
+			Network_receiver_TCP tcpRecv;
+			//////////////////////////
 			//New connection, add TCP port to HashMap and send answer
-			if(!Client.getM_IP_Pseudo_Table().containsKey(srcPort)) {
-				Client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
+			if(!client.getM_IP_Pseudo_Table().containsKey(srcPort)) {
+				client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 				try {
-					Client.getM_sender().send(Network_Sender.createUDPDatagram(respMsg, srcPort));
+					//Notify that i'm here too
+					client.getM_sender().send(Network_Sender.createUDPDatagram(respMsg, srcPort));
+					
+					//Open TCP connection
+					sock = new Socket(InetAddress.getLocalHost(), srcPort);
+					client.getSocketList().add(sock);
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		/*TODO later: deconnect
+		/*TODO : disconnect
 		 *  else if ....
 		} */
 	}

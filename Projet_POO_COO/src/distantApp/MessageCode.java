@@ -11,6 +11,8 @@ public final class MessageCode {
 	public static final String NOTIFY_JOIN = PREFIX + "new";
 	public static final String NOTIFY_LEAVE = PREFIX + "leave";
 	
+	public static final String ASK_CHANGE_PSEUDO = PREFIX + "cp";
+	
 	
 	
 }

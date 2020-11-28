@@ -24,9 +24,14 @@ public class MainApplication {
 		
 		System.out.println(Client.getM_IP_Pseudo_Table().toString());
 		
+		System.out.println("Nb tcp clients : " + Client.getSocketList().size());
 		
-				
-		while(true);
+		while(true)
+		{
+			System.out.println("Message: ");
+			String m = input.nextLine();
+			Client.getM_sender().TCP_sendAll(m);
+		}
 
 	}
 
