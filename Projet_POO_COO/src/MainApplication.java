@@ -15,22 +15,15 @@ public class MainApplication {
 		
 		Client.discoverNetwork();
 		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-		System.out.println(Client.getM_IP_Pseudo_Table().toString());
-		
-		System.out.println("Nb tcp clients : " + Client.getSocketList().size());
 		
 		while(true)
 		{
 			System.out.println("Message: ");
 			String m = input.nextLine();
-			Client.getM_sender().TCP_sendAll(m);
+			Client.setPseudo(m);
+			Client.getM_sender().sendPseudoRequest();
+			System.out.println(Client.getM_IP_Pseudo_Table().toString());
 		}
 
 	}

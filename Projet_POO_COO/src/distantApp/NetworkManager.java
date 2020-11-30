@@ -14,8 +14,13 @@ public class NetworkManager {
 	public ArrayList<Socket> socketList;
 	private Network_Sender m_sender;
 	private Network_receiver_UDP m_receiver_UDP;
-	private String pseudo = null;
 	private TCPAccepter accepter;
+	
+	private boolean validPseudo = true;
+	
+	private String pseudo = LocalSystemConfig.UNKNOWN_USERNAME;
+	
+	
 
 
 	public NetworkManager() {
@@ -43,6 +48,14 @@ public class NetworkManager {
 		return socketList;
 	}
 
+	public String getPseudo() {
+		return pseudo;
+	}
+
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
+	}
+
 	public Network_Sender getM_sender() {
 		return m_sender;
 	}
@@ -68,7 +81,15 @@ public class NetworkManager {
 	}
 	
 	public void choosePseudo(String pseudo) {
-		m_sender.TCP_sendAll(MessageCode.ASK_CHANGE_PSEUDO + pseudo);
+		m_sender.sendPseudoRequest();
+	}
+
+	public boolean isValidPseudo() {
+		return validPseudo;
+	}
+
+	public void setValidPseudo(boolean validPseudo) {
+		this.validPseudo = validPseudo;
 	}
 
 	
