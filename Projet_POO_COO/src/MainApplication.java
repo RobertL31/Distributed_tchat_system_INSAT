@@ -7,23 +7,32 @@ import localApp.LocalSystemConfig;
 public class MainApplication {
 
 	public static void main(String[] args) {
-		NetworkManager Client = new NetworkManager();
+		NetworkManager client = new NetworkManager();
 		Scanner input = new Scanner(System.in);
-		
+
 		System.out.println("[UDP] Listening on " + LocalSystemConfig.get_UDP_port());
 		System.out.println("[TCP] Listening on " + LocalSystemConfig.get_TCP_port());
-		
-		Client.discoverNetwork();
-		
-		
-		
+
+		client.discoverNetwork();
+
+
+
 		while(true)
 		{
-			System.out.println("Message: ");
-			String m = input.nextLine();
-			Client.setPseudo(m);
-			Client.getM_sender().sendPseudoRequest();
-			System.out.println(Client.getM_IP_Pseudo_Table().toString());
+			System.out.println("cmd: printlist | pseudo");
+			String in = input.next();
+			if(in.equals("printlist"))
+				System.out.println(client.getM_IP_Pseudo_Table().toString());
+
+			else if(in.equals("pseudo")) {
+				System.out.print("Pseudo: ");
+				String pseudo = input.next();
+				while(!client.choosePseudo(pseudo)) {
+					System.out.println("Already used !");
+					pseudo = input.next();
+				}
+				System.out.println("Pseudo OK: " + client.getPseudo());
+			}
 		}
 
 	}

@@ -80,8 +80,12 @@ public class NetworkManager {
 		}
 	}
 	
-	public void choosePseudo(String pseudo) {
-		m_sender.sendPseudoRequest();
+	public boolean choosePseudo(String pseudo) {
+		this.setPseudo(pseudo);
+		boolean ret = m_sender.sendPseudoRequest();
+		if(!ret) this.setPseudo(LocalSystemConfig.UNKNOWN_USERNAME);
+		this.setValidPseudo(true);
+		return ret;
 	}
 
 	public boolean isValidPseudo() {
