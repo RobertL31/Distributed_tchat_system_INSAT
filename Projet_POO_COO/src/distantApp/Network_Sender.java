@@ -28,7 +28,7 @@ public class Network_Sender {
 		return new DatagramPacket(buff, buff.length, InetAddress.getLocalHost(), port);
 	}
 
-	public static void send(String msg, int port){
+	public static boolean send(String msg, int port){
 		Socket sock;
 		try {
 			sock = new Socket(InetAddress.getLocalHost(), port);
@@ -36,9 +36,10 @@ public class Network_Sender {
 			out.println(msg);
 			out.flush();
 			sock.close();
+			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
 	}
 
@@ -47,7 +48,7 @@ public class Network_Sender {
 		client.getM_IP_Pseudo_Table().forEach((port, distPseudo) -> {
 			String message = MessageCode.ASK_CHANGE_PSEUDO 
 					+ LocalSystemConfig.get_TCP_port()
-					+ MessageCode.SEP_CHANGE_PSEUDO 
+					+ MessageCode.SEP 
 					+ client.getPseudo();
 			Network_Sender.send(message, port);
 		});
@@ -63,7 +64,7 @@ public class Network_Sender {
 			{
 				String message = MessageCode.NOTIFY_CHANGE_PSEUDO 
 						+ LocalSystemConfig.get_TCP_port() 
-						+ MessageCode.SEP_CHANGE_PSEUDO 
+						+ MessageCode.SEP 
 						+ client.getPseudo();
 				send(message, port);
 			});

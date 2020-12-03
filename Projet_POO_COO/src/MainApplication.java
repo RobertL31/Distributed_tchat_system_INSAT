@@ -1,6 +1,7 @@
 import java.sql.Time;
 import java.util.Scanner;
 
+import database.Conversation;
 import distantApp.NetworkManager;
 import localApp.LocalSystemConfig;
 
@@ -33,6 +34,14 @@ public class MainApplication {
 				}
 				System.out.println("Pseudo OK: " + client.getPseudo());
 			}
+			else if(in.equals("send")) {
+				System.out.print("destPort: ");
+				String target = input.next();
+				String msg = input.next();
+				Conversation c = new Conversation(Integer.valueOf(target));
+				c.send(msg);
+			}
+			
 		}
 
 	}

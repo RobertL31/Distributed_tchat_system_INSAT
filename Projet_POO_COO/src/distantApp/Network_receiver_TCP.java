@@ -37,7 +37,7 @@ public class Network_receiver_TCP extends Thread{
 		if(message == null) return;
 		if(message.startsWith(MessageCode.ASK_CHANGE_PSEUDO)) {
 			message = message.substring(MessageCode.ASK_CHANGE_PSEUDO.length());
-			String[] answer = message.split(MessageCode.SEP_CHANGE_PSEUDO);
+			String[] answer = message.split(MessageCode.SEP);
 			int srcPort = Integer.valueOf(answer[0]);
 			String pseudo = answer[1];
 			boolean isValid = !pseudo.equals(client.getPseudo());
@@ -54,7 +54,7 @@ public class Network_receiver_TCP extends Thread{
 		}
 		else if(message.startsWith(MessageCode.NOTIFY_CHANGE_PSEUDO)) {
 			String answer = message.substring(MessageCode.NOTIFY_CHANGE_PSEUDO.length());
-			String[] ansArray = answer.split(MessageCode.SEP_CHANGE_PSEUDO);
+			String[] ansArray = answer.split(MessageCode.SEP);
 			int port = Integer.valueOf(ansArray[0]);
 			String pseudo = ansArray[1];
 			client.getM_IP_Pseudo_Table().put(port, pseudo);
@@ -62,14 +62,14 @@ public class Network_receiver_TCP extends Thread{
 			//Send my pseudo
 			String reply = MessageCode.TELL_PSEUDO 
 					+ LocalSystemConfig.get_TCP_port() 
-					+ MessageCode.SEP_CHANGE_PSEUDO
+					+ MessageCode.SEP
 					+ client.getPseudo()
 					;
 			Network_Sender.send(reply, port);
 		}
 		else if(message.startsWith(MessageCode.TELL_PSEUDO)) {
 			String answer = message.substring(MessageCode.TELL_PSEUDO.length());
-			String[] ansArray = answer.split(MessageCode.SEP_CHANGE_PSEUDO);
+			String[] ansArray = answer.split(MessageCode.SEP);
 			int port = Integer.valueOf(ansArray[0]);
 			String distPseudo = ansArray[1];
 			client.getM_IP_Pseudo_Table().put(port, distPseudo);
