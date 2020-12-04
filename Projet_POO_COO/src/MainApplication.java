@@ -17,10 +17,10 @@ public class MainApplication {
 		client.discoverNetwork();
 
 
-
+		System.out.println("cmd: printlist | pseudo | send | printconv");
 		while(true)
 		{
-			System.out.println("cmd: printlist | pseudo");
+			
 			String in = input.next();
 			if(in.equals("printlist"))
 				System.out.println(client.getM_IP_Pseudo_Table().toString());
@@ -35,11 +35,14 @@ public class MainApplication {
 				System.out.println("Pseudo OK: " + client.getPseudo());
 			}
 			else if(in.equals("send")) {
-				System.out.print("destPort: ");
+				System.out.print("target pseudo: ");
 				String target = input.next();
 				String msg = input.next();
-				Conversation c = new Conversation(Integer.valueOf(target));
-				c.send(msg);
+				
+				client.sendPM(target, msg);
+			}
+			else if(in.equals("printconv")) {
+				System.out.println(client.getConvManager().toString());
 			}
 			
 		}

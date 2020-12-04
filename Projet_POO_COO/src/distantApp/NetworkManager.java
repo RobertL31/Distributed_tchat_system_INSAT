@@ -5,7 +5,10 @@ import java.net.DatagramPacket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
+import database.ConversationManager;
+import database.DatabaseConfig;
 import localApp.LocalSystemConfig;
 
 public class NetworkManager {
@@ -14,6 +17,7 @@ public class NetworkManager {
 	public ArrayList<Socket> socketList;
 	private Network_Sender m_sender;
 	private Network_receiver_UDP m_receiver_UDP;
+	private ConversationManager convManager;
 	private TCPAccepter accepter;
 	
 	private boolean validPseudo = true;
@@ -29,14 +33,18 @@ public class NetworkManager {
 		//Open a listening UDP port
 		LocalSystemConfig.openUDPServer();
 		LocalSystemConfig.openTCPServer();
+		
+		//Connect to database (Move to ConversationManager)
+		DatabaseConfig.connectToDatabase();
 
 		this.m_IP_Pseudo_Table = new HashMap<>();
 		this.socketList = new ArrayList<Socket>();
 		this.m_sender = new Network_Sender(this);
 		this.m_receiver_UDP = new Network_receiver_UDP(this);
 		this.accepter = new TCPAccepter(this);
+		this.convManager = new ConversationManager();
 		
-		//Launch UDP receiver thread
+		//Launch UDP/TCP receiver thread
 		initThreads();
 	}
 
@@ -56,8 +64,23 @@ public class NetworkManager {
 		this.pseudo = pseudo;
 	}
 
+	public ConversationManager getConvManager() {
+		return convManager;
+	}
+
 	public Network_Sender getM_sender() {
 		return m_sender;
+	}
+	
+	public int getPortFromPseudo(String pseudo) {
+		String username;
+		Set<Integer> keys = m_IP_Pseudo_Table.keySet();
+		for(int key : keys) {
+			username = m_IP_Pseudo_Table.get(key);
+			if(username.equals(pseudo))
+				return key;
+		}
+		return -1;
 	}
 
 	private void initThreads() {
@@ -94,6 +117,18 @@ public class NetworkManager {
 
 	public void setValidPseudo(boolean validPseudo) {
 		this.validPseudo = validPseudo;
+	}
+	
+	public void sendPM(String pseudo, String message) {
+		if(pseudo.equals(LocalSystemConfig.UNKNOWN_USERNAME)) {
+			System.out.println("Illegal pseudo");
+			return;
+		}
+		int destPort = this.getPortFromPseudo(pseudo);
+		if(destPort != -1)
+			convManager.send(message, destPort);
+		else
+			System.out.println("Can't find username");
 	}
 
 	

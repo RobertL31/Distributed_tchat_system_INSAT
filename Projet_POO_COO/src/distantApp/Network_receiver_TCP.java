@@ -74,12 +74,25 @@ public class Network_receiver_TCP extends Thread{
 			String distPseudo = ansArray[1];
 			client.getM_IP_Pseudo_Table().put(port, distPseudo);
 		}
+		else if(message.startsWith(MessageCode.PRIVATE_MESSAGE)){
+			String answer = message.substring(MessageCode.PRIVATE_MESSAGE.length());
+			String[] ansArray = answer.split(MessageCode.SEP);
+			int port = Integer.valueOf(ansArray[0]);
+			String content = ansArray[1];
+			client.getConvManager().receive(content, port);
+		}
 	}
 
 	public void run() {
-		while(true) {
-			String msg = receive();
-			processMessage(msg);
+		String msg = receive();
+		processMessage(msg);
+		//Once the message processed, close socket + stop thread
+		try {
+			listeningSocket.close();
+		} catch (IOException e) {
+			System.err.println("Network_Receiver: Socket already closed !");
+			e.printStackTrace();
 		}
+		
 	}
 }
