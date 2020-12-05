@@ -76,6 +76,21 @@ public class Conversation {
 			e.printStackTrace();
 		}
 	}
+	
+	public void addMessageToList(Message m) {
+		long m_time = m.getTime();
+		long c_time;
+		for(int i=0; i<messages.size(); i++) {
+			c_time = messages.get(i).getTime();
+			if(m_time < c_time) {
+				messages.add(i, m);
+				return;
+			}
+		}
+		//If this is the last message: add at the end of the list
+		messages.add(m);
+		return;
+	}
 
 	public int getDestIP() {
 		return destIP;

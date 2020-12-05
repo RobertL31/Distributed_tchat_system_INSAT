@@ -1,5 +1,6 @@
 package database;
 
+import java.sql.Date;
 import java.sql.Time;
 
 public class Message {
@@ -32,7 +33,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "Message [from:" + src + ", to:" + dst + ", at" + new Time(time) + " : " + content + "]\n";
+		return "Message [from:" + src + ", to:" + dst + ", at" + new Date(time) + " " + new Time(time) + " : " + content + "]\n";
 	}
 	
 	
