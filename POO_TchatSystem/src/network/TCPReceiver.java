@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,12 +9,12 @@ import java.net.Socket;
 
 import localApp.LocalSystemConfig;
 
-public class Network_receiver_TCP extends Thread{
+public class TCPReceiver extends Thread{
 
 	private NetworkManager client;
 	private Socket listeningSocket;
 
-	Network_receiver_TCP(NetworkManager client, Socket listeninSocket){
+	TCPReceiver(NetworkManager client, Socket listeninSocket){
 		this.client = client;
 		this.listeningSocket = listeninSocket;
 	}
@@ -44,7 +44,7 @@ public class Network_receiver_TCP extends Thread{
 
 			//Init a new connection
 			String reply = MessageCode.REPLY_CHANGE_PSEUDO + Boolean.toString(isValid);
-			Network_Sender.send(reply, srcPort);
+			Sender.send(reply, srcPort);
 
 		}
 		else if(message.startsWith(MessageCode.REPLY_CHANGE_PSEUDO)) {
@@ -65,7 +65,7 @@ public class Network_receiver_TCP extends Thread{
 					+ MessageCode.SEP
 					+ client.getPseudo()
 					;
-			Network_Sender.send(reply, port);
+			Sender.send(reply, port);
 		}
 		else if(message.startsWith(MessageCode.TELL_PSEUDO)) {
 			String answer = message.substring(MessageCode.TELL_PSEUDO.length());

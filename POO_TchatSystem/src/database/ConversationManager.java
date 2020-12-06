@@ -63,8 +63,6 @@ public class ConversationManager {
 				+ "dest=" 
 				+ LocalSystemConfig.get_TCP_port();
 		
-		System.out.println(sentMessageQuery);
-		System.out.println(receivedMessageQuery);
 		//Variables to store messages informations
 		int src, dst, srcCol, dstCol, contentCol, dateCol;
 		String content;
@@ -116,7 +114,7 @@ public class ConversationManager {
 				getConversation(src).addMessageToList(toAdd);
 			}
 		} catch (SQLException e) {
-			System.err.println("Problem ResultSet while retreiving received messages history") ;
+			System.err.println("Problem on ResultSet while retreiving received messages history") ;
 			e.printStackTrace();
 		}
 		

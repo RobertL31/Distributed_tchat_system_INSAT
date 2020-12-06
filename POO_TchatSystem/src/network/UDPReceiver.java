@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -14,12 +14,12 @@ import java.util.Objects;
 import localApp.LocalSystemConfig;
 import tools.Pair;
 
-public class Network_receiver_UDP extends Thread{
+public class UDPReceiver extends Thread{
 
 	private DatagramSocket m_UDP_socket;
 	private NetworkManager client;
 
-	public Network_receiver_UDP(NetworkManager client) {
+	public UDPReceiver(NetworkManager client) {
 		this.m_UDP_socket = LocalSystemConfig.m_UDP_socket;
 		this.client = client;
 	}
@@ -52,7 +52,7 @@ public class Network_receiver_UDP extends Thread{
 
 		//for TCP communications//
 		Socket sock;
-		Network_receiver_TCP tcpRecv;
+		TCPReceiver tcpRecv;
 
 
 		/**
@@ -66,8 +66,7 @@ public class Network_receiver_UDP extends Thread{
 			client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 			try {
 				//Notify that i'm here too
-				client.getM_sender().send(Network_Sender.createUDPDatagram(respMsg, srcPort));
-				System.out.println(client.getM_IP_Pseudo_Table().toString());
+				client.getM_sender().send(Sender.createUDPDatagram(respMsg, srcPort));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -76,12 +75,11 @@ public class Network_receiver_UDP extends Thread{
 
 		else if (msg.startsWith(MessageCode.NOTIFY_REPLY)) {
 				client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
-				System.out.println(client.getM_IP_Pseudo_Table().toString());
 
 		}
-		/*TODO : disconnect
-		 *  else if ....
-		} */
+		else if (msg.startsWith(MessageCode.NOTIFY_LEAVE)) {
+			client.getM_IP_Pseudo_Table().remove(srcPort);
+		}
 	}
 
 

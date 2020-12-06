@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -15,10 +15,10 @@ public class TCPAccepter extends Thread{
 	public void run(){
 		while(true) {
 			Socket sock;
-			Network_receiver_TCP tcpRecv;
+			TCPReceiver tcpRecv;
 			try {
 				sock = LocalSystemConfig.m_TCP_socket.accept();
-				tcpRecv = new Network_receiver_TCP(client, sock);
+				tcpRecv = new TCPReceiver(client, sock);
 				tcpRecv.start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

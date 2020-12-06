@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -13,10 +13,10 @@ import localApp.LocalSystemConfig;
 
 public class NetworkManager {
 	
-	private HashMap<Integer, String> m_IP_Pseudo_Table;
+	public static HashMap<Integer, String> m_IP_Pseudo_Table = new HashMap<>();
 	public ArrayList<Socket> socketList;
-	private Network_Sender m_sender;
-	private Network_receiver_UDP m_receiver_UDP;
+	private Sender m_sender;
+	private UDPReceiver m_receiver_UDP;
 	private ConversationManager convManager;
 	private TCPAccepter accepter;
 	
@@ -37,10 +37,9 @@ public class NetworkManager {
 		//Connect to database (Move to ConversationManager)
 		DatabaseConfig.connectToDatabase();
 
-		this.m_IP_Pseudo_Table = new HashMap<>();
 		this.socketList = new ArrayList<Socket>();
-		this.m_sender = new Network_Sender(this);
-		this.m_receiver_UDP = new Network_receiver_UDP(this);
+		this.m_sender = new Sender(this);
+		this.m_receiver_UDP =  new UDPReceiver(this);
 		this.accepter = new TCPAccepter(this);
 		this.convManager = new ConversationManager();
 		
@@ -68,7 +67,7 @@ public class NetworkManager {
 		return convManager;
 	}
 
-	public Network_Sender getM_sender() {
+	public Sender getM_sender() {
 		return m_sender;
 	}
 	
@@ -88,20 +87,30 @@ public class NetworkManager {
 		m_receiver_UDP.start();
 	}
 
-	public void discoverNetwork() {
-		
-		//Send a UDP datagram to notify all the network
-		String msg = MessageCode.NOTIFY_JOIN;
+	
+	public void UDPBroadcast(String message) {
 		for(int i=LocalSystemConfig.START_PORT; i<=LocalSystemConfig.END_PORT; ++i) {
 			if(i != LocalSystemConfig.get_UDP_port()) {
 				try {
-					m_sender.send(Network_Sender.createUDPDatagram(msg, i));
+					m_sender.send(Sender.createUDPDatagram(message, i));
 				} catch (IOException e) {
 					System.err.println("Cannot send UDP datagram to " + i);
 				}
 			}
 		}
 	}
+	
+	public void discoverNetwork() {
+		//Send a UDP datagram to notify all the network
+		String msg = MessageCode.NOTIFY_JOIN;
+		UDPBroadcast(msg);
+	}
+	
+	public void disconnect() {
+		String msg = MessageCode.NOTIFY_LEAVE;
+		UDPBroadcast(msg);
+	}
+	
 	
 	public boolean choosePseudo(String pseudo) {
 		this.setPseudo(pseudo);
@@ -131,7 +140,6 @@ public class NetworkManager {
 			System.out.println("Can't find username");
 	}
 
-	
 
 
 }

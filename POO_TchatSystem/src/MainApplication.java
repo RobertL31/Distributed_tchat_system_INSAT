@@ -2,8 +2,8 @@ import java.sql.Time;
 import java.util.Scanner;
 
 import database.Conversation;
-import distantApp.NetworkManager;
 import localApp.LocalSystemConfig;
+import network.NetworkManager;
 
 public class MainApplication {
 
@@ -17,7 +17,7 @@ public class MainApplication {
 		client.discoverNetwork();
 
 
-		System.out.println("cmd: printlist | pseudo | send | printconv");
+		System.out.println("cmd: printlist | pseudo | send | printconv | disconnect");
 		while(true)
 		{
 			
@@ -43,6 +43,11 @@ public class MainApplication {
 			}
 			else if(in.equals("printconv")) {
 				System.out.println(client.getConvManager().toString());
+			}
+			
+			else if(in.equals("disconnect")) {
+				client.disconnect();
+				System.exit(1);
 			}
 			
 		}

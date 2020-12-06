@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,15 +10,18 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+
+import com.mysql.cj.xdevapi.Client;
 
 import localApp.LocalSystemConfig;
 
-public class Network_Sender {
+public class Sender {
 
 	private DatagramSocket m_UDP_socket;
 	private NetworkManager client;
 
-	public Network_Sender(NetworkManager client) {
+	public Sender(NetworkManager client) {
 		m_UDP_socket = LocalSystemConfig.m_UDP_socket;
 		this.client = client;
 	}
@@ -38,19 +41,23 @@ public class Network_Sender {
 			sock.close();
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			//If send fail => target not connected => remove from the connected list
+			NetworkManager.m_IP_Pseudo_Table.remove(port);
 			return false;
 		}
 	}
 
 	public boolean sendPseudoRequest() {
 		//Send chosen pseudo to all the network
-		client.getM_IP_Pseudo_Table().forEach((port, distPseudo) -> {
+		//Clone the HashMap to avoid modifications conflicts during forEach
+		HashMap<Integer, String> users;
+		users = (HashMap<Integer, String>) client.getM_IP_Pseudo_Table().clone();
+		users.forEach((port, distPseudo) -> {
 			String message = MessageCode.ASK_CHANGE_PSEUDO 
 					+ LocalSystemConfig.get_TCP_port()
 					+ MessageCode.SEP 
 					+ client.getPseudo();
-			Network_Sender.send(message, port);
+			Sender.send(message, port);
 		});
 
 		try {
@@ -60,7 +67,8 @@ public class Network_Sender {
 		}
 
 		if(client.isValidPseudo()) {
-			client.getM_IP_Pseudo_Table().forEach((port, pseudo) -> 
+			users = (HashMap<Integer, String>) client.getM_IP_Pseudo_Table().clone();
+			users.forEach((port, pseudo) -> 
 			{
 				String message = MessageCode.NOTIFY_CHANGE_PSEUDO 
 						+ LocalSystemConfig.get_TCP_port() 

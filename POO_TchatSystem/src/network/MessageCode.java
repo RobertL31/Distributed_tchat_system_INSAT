@@ -1,4 +1,4 @@
-package distantApp;
+package network;
 
 import java.net.DatagramPacket;
 
@@ -14,13 +14,13 @@ public final class MessageCode {
 	public static final String NOTIFY_LEAVE = "leave";
 	
 	//Change pseudo codes
-	public static final String ASK_CHANGE_PSEUDO = "1";
-	public static final String REPLY_CHANGE_PSEUDO = "2";
-	public static final String NOTIFY_CHANGE_PSEUDO = "3";
-	public static final String TELL_PSEUDO = "4";
+	public static final String ASK_CHANGE_PSEUDO = "acp";
+	public static final String REPLY_CHANGE_PSEUDO = "rcp";
+	public static final String NOTIFY_CHANGE_PSEUDO = "ncp";
+	public static final String TELL_PSEUDO = "tp";
 	
 	//Send private message codes
-	public static final String PRIVATE_MESSAGE = "5";
+	public static final String PRIVATE_MESSAGE = "pm";
 	
 	
 	

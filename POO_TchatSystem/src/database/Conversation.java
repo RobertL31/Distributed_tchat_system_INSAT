@@ -15,9 +15,10 @@ import java.util.HashMap;
 
 import com.mysql.cj.exceptions.RSAException;
 
-import distantApp.MessageCode;
-import distantApp.Network_Sender;
 import localApp.LocalSystemConfig;
+import network.MessageCode;
+import network.NetworkManager;
+import network.Sender;
 import tools.Pair;
 
 public class Conversation {
@@ -27,6 +28,7 @@ public class Conversation {
 	//format: [(source port, destination port), (time, message)]
 	private ArrayList<Message> messages;
 	private Connection con = null;
+	private NetworkManager client;
 
 	// Constructor for new conversation
 	public Conversation(int destIP){
@@ -115,7 +117,7 @@ public class Conversation {
 				+ message;
 
 		// message sended => add to database
-		if(Network_Sender.send(toSend, destIP)){
+		if(Sender.send(toSend, destIP)){
 			String addToDB = 
 					"INSERT INTO "
 							+ DatabaseConfig.DB_TABLE_NAME
