@@ -6,7 +6,8 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-import localApp.LocalSystemConfig;
+import config.DatabaseConfig;
+import config.LocalSystemConfig;
 import tools.Pair;
 
 public class ConversationManager {

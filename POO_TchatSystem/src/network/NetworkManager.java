@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import config.DatabaseConfig;
+import config.LocalSystemConfig;
 import database.ConversationManager;
-import database.DatabaseConfig;
-import localApp.LocalSystemConfig;
 
 public class NetworkManager {
 	

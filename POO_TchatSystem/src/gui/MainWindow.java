@@ -1,29 +1,33 @@
 package gui;
 
-import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
-import network.NetworkManager;
+import config.GUIConfig;
 
 public class MainWindow extends JFrame{
+
 	
-	PseudoWindow pseudoWin;
-	NetworkManager client;
+	GridBagLayout grid;
+	PseudoPanel pseudoP;
 	
-	public MainWindow(NetworkManager client) {
-		super(GUIConfig.APP_NAME);
-		pseudoWin = new PseudoWindow(client);
-		this.client = client;
-		this.setPreferredSize(GUIConfig.MAINWINDOW_DIMENSIONS);
-		this.pack();
-		this.setVisible(true);
+	public MainWindow() {
+		super();
+		
+		setPreferredSize(GUIConfig.MAINWINDOW_DIMENSIONS);
+		grid = new GridBagLayout();
+		
+		
+		initComponents();
+		pack();
+		setVisible(true);
 	}
 	
-	public void showPseudoWindow() {
-		pseudoWin.showWin();
-	}
 	
+	public void initComponents() {
+		pseudoP = new PseudoPanel();
+		add(pseudoP);
+	}
 }

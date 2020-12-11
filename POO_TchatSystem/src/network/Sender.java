@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 import com.mysql.cj.xdevapi.Client;
 
-import localApp.LocalSystemConfig;
+import config.LocalSystemConfig;
 
 public class Sender {
 

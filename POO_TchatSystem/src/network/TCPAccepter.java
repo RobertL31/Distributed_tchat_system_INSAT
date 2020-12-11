@@ -3,7 +3,7 @@ package network;
 import java.io.IOException;
 import java.net.Socket;
 
-import localApp.LocalSystemConfig;
+import config.LocalSystemConfig;
 
 public class TCPAccepter extends Thread{
 	NetworkManager client;

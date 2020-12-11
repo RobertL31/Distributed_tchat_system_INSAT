@@ -1,4 +1,4 @@
-package localApp;
+package config;
 
 import java.io.IOException;
 import java.net.DatagramSocket;

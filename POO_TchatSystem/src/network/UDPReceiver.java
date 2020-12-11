@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-import localApp.LocalSystemConfig;
+import config.LocalSystemConfig;
 import tools.Pair;
 
 public class UDPReceiver extends Thread{

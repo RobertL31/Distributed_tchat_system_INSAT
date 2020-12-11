@@ -1,9 +1,9 @@
 import java.sql.Time;
 import java.util.Scanner;
 
+import config.LocalSystemConfig;
 import database.Conversation;
 import gui.MainWindow;
-import localApp.LocalSystemConfig;
 import network.NetworkManager;
 
 public class MainApplication {
@@ -13,10 +13,8 @@ public class MainApplication {
 		
 		
 		///////// GUI Version //////////
-		
-		MainWindow appWIn = new MainWindow(client);
-		
-		appWIn.showPseudoWindow();
+		 
+		MainWindow app = new MainWindow();
 		
 		////////////////////////////////
 		

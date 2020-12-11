@@ -15,7 +15,8 @@ import java.util.HashMap;
 
 import com.mysql.cj.exceptions.RSAException;
 
-import localApp.LocalSystemConfig;
+import config.DatabaseConfig;
+import config.LocalSystemConfig;
 import network.MessageCode;
 import network.NetworkManager;
 import network.Sender;

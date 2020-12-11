@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import localApp.LocalSystemConfig;
+import config.LocalSystemConfig;
 
 public class TCPReceiver extends Thread{
 
