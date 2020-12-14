@@ -9,8 +9,8 @@ import network.NetworkManager;
 public class MainApplication {
 
 	public static void main(String[] args) {
-		NetworkManager client = new NetworkManager();
-		
+		LocalSystemConfig.initialize();
+		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
 		
 		///////// GUI Version //////////
 		 

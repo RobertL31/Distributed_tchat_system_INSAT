@@ -6,20 +6,20 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 
 import config.GUIConfig;
+import config.LocalSystemConfig;
+import network.NetworkManager;
 
 public class MainWindow extends JFrame{
 
 	
 	GridBagLayout grid;
 	PseudoPanel pseudoP;
+	NetworkManager client;
 	
 	public MainWindow() {
 		super();
-		
+		this.client = LocalSystemConfig.getNetworkManagerInstance();
 		setPreferredSize(GUIConfig.MAINWINDOW_DIMENSIONS);
-		grid = new GridBagLayout();
-		
-		
 		initComponents();
 		pack();
 		setVisible(true);

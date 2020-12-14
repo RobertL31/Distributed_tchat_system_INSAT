@@ -14,8 +14,8 @@ public class TCPReceiver extends Thread{
 	private NetworkManager client;
 	private Socket listeningSocket;
 
-	TCPReceiver(NetworkManager client, Socket listeninSocket){
-		this.client = client;
+	TCPReceiver(Socket listeninSocket){
+		this.client = LocalSystemConfig.getNetworkManagerInstance();
 		this.listeningSocket = listeninSocket;
 	}
 

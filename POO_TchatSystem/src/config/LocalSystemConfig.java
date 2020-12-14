@@ -4,10 +4,25 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 
+import network.NetworkManager;
+
 public final class LocalSystemConfig {
 
 
 	/* Configuration class, no constructor has to be built*/
+	private static NetworkManager client;
+	
+	public static void initialize() {
+		client = new NetworkManager();
+		client.init();
+	}
+	
+	public static NetworkManager getNetworkManagerInstance() {
+		 return client;
+	}
+	
+	
+	
 	public static final String UNKNOWN_USERNAME = "/uknw";
 	
 	public static final int START_PORT = 65000;
@@ -32,9 +47,22 @@ public final class LocalSystemConfig {
 		}
 	}
 
+	public static DatagramSocket get_UDP_socket() {
+		return m_UDP_socket;
+	}
+
+	public static ServerSocket get_TCP_socket() {
+		return m_TCP_socket;
+	}
+
 	public static int get_UDP_port() {
 		return m_UDP_socket.getLocalPort();
 	}
+	
+	public static int get_TCP_port() {
+		return m_TCP_socket.getLocalPort();
+	}
+	
 
 	public static void openTCPServer(){
 		try {
@@ -46,8 +74,7 @@ public final class LocalSystemConfig {
 		}
 	}
 	
-	public static int get_TCP_port() {
-		return m_TCP_socket.getLocalPort();
-	}
+	
+	
 
 }

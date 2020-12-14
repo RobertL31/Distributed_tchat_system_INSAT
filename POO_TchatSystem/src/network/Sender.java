@@ -21,9 +21,9 @@ public class Sender {
 	private DatagramSocket m_UDP_socket;
 	private NetworkManager client;
 
-	public Sender(NetworkManager client) {
-		m_UDP_socket = LocalSystemConfig.m_UDP_socket;
-		this.client = client;
+	public Sender() {
+		m_UDP_socket = LocalSystemConfig.get_UDP_socket();
+		this.client = LocalSystemConfig.getNetworkManagerInstance();
 	}
 
 	public static DatagramPacket createUDPDatagram(String message, int port) throws IOException {
@@ -42,11 +42,12 @@ public class Sender {
 			return true;
 		} catch (IOException e) {
 			//If send fail => target not connected => remove from the connected list
-			NetworkManager.m_IP_Pseudo_Table.remove(port);
+			LocalSystemConfig.getNetworkManagerInstance().getM_IP_Pseudo_Table().remove(port);
 			return false;
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean sendPseudoRequest() {
 		//Send chosen pseudo to all the network
 		//Clone the HashMap to avoid modifications conflicts during forEach

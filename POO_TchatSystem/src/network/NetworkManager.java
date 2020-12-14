@@ -13,7 +13,7 @@ import database.ConversationManager;
 
 public class NetworkManager {
 	
-	public static HashMap<Integer, String> m_IP_Pseudo_Table = new HashMap<>();
+	public HashMap<Integer, String> m_IP_Pseudo_Table = new HashMap<>();
 	public ArrayList<Socket> socketList;
 	private Sender m_sender;
 	private UDPReceiver m_receiver_UDP;
@@ -23,9 +23,6 @@ public class NetworkManager {
 	private boolean validPseudo = true;
 	
 	private String pseudo = LocalSystemConfig.UNKNOWN_USERNAME;
-	
-	
-
 
 	public NetworkManager() {
 		super();
@@ -37,10 +34,15 @@ public class NetworkManager {
 		//Connect to database (Move to ConversationManager)
 		DatabaseConfig.connectToDatabase();
 
+	}
+	
+	// sender / receivers need a reference to the NetworkManager as they are threads, 
+	// if they process before the network manager is initialized -> null reference
+	public void init() {
 		this.socketList = new ArrayList<Socket>();
-		this.m_sender = new Sender(this);
-		this.m_receiver_UDP =  new UDPReceiver(this);
-		this.accepter = new TCPAccepter(this);
+		this.m_sender = new Sender();
+		this.m_receiver_UDP =  new UDPReceiver();
+		this.accepter = new TCPAccepter();
 		this.convManager = new ConversationManager();
 		
 		//Launch UDP/TCP receiver thread

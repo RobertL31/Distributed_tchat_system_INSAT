@@ -8,8 +8,8 @@ import config.LocalSystemConfig;
 public class TCPAccepter extends Thread{
 	NetworkManager client;
 
-	TCPAccepter(NetworkManager client){
-		this.client = client;
+	TCPAccepter(){
+		this.client = LocalSystemConfig.getNetworkManagerInstance();
 	}
 
 	public void run(){
@@ -18,7 +18,7 @@ public class TCPAccepter extends Thread{
 			TCPReceiver tcpRecv;
 			try {
 				sock = LocalSystemConfig.m_TCP_socket.accept();
-				tcpRecv = new TCPReceiver(client, sock);
+				tcpRecv = new TCPReceiver(sock);
 				tcpRecv.start();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

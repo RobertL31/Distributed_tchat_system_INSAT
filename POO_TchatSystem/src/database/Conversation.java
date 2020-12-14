@@ -1,26 +1,13 @@
 package database;
 
-import java.lang.reflect.Constructor;
-import java.net.InetAddress;
-import java.security.Timestamp;
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import com.mysql.cj.exceptions.RSAException;
-
 import config.DatabaseConfig;
 import config.LocalSystemConfig;
 import network.MessageCode;
-import network.NetworkManager;
 import network.Sender;
-import tools.Pair;
 
 public class Conversation {
 
@@ -29,7 +16,6 @@ public class Conversation {
 	//format: [(source port, destination port), (time, message)]
 	private ArrayList<Message> messages;
 	private Connection con = null;
-	private NetworkManager client;
 
 	// Constructor for new conversation
 	public Conversation(int destIP){

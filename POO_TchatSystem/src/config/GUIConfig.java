@@ -7,7 +7,9 @@ public class GUIConfig {
 	public static final String APP_NAME = "ClavardApp";
 	public static final String PSEUDO_BUTTON_TXT = "Valider";
 	
-	
+	// Pseudo constaints
+	public static final int MAX_PSEUDO_LEN = 15;
+	public static final int MIN_PSEUDO_LEN = 2;
 	
 	// Windows dimensions (Width, Height)
 	// Main Window

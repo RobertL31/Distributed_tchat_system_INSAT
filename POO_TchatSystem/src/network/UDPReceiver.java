@@ -19,9 +19,9 @@ public class UDPReceiver extends Thread{
 	private DatagramSocket m_UDP_socket;
 	private NetworkManager client;
 
-	public UDPReceiver(NetworkManager client) {
+	public UDPReceiver() {
 		this.m_UDP_socket = LocalSystemConfig.m_UDP_socket;
-		this.client = client;
+		this.client = LocalSystemConfig.getNetworkManagerInstance();
 	}
 
 	/**

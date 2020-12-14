@@ -1,7 +1,5 @@
 package network;
 
-import java.net.DatagramPacket;
-
 // Contains macros for message -> action correspondence
 public final class MessageCode {
 	
