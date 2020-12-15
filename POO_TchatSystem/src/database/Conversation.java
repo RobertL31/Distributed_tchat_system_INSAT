@@ -15,7 +15,7 @@ public class Conversation {
 	private int destIP;
 	//format: [(source port, destination port), (time, message)]
 	private ArrayList<Message> messages;
-	private Connection con = null;
+	private Connection con;
 
 	// Constructor for new conversation
 	public Conversation(int destIP){

@@ -83,6 +83,12 @@ public class NetworkManager {
 		}
 		return -1;
 	}
+	
+	public String getPseudoFromPort(int port) {
+		if(port == LocalSystemConfig.get_TCP_port()) 
+			return this.pseudo;
+		return m_IP_Pseudo_Table.get(port);
+	}
 
 	private void initThreads() {
 		accepter.start();

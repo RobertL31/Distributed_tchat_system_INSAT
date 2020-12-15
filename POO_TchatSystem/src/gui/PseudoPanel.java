@@ -19,6 +19,7 @@ public class PseudoPanel extends JPanel implements ActionListener{
 	private JButton sendButton;
 	private ActionListener sendButtonListener;
 	private JLabel placeholder;
+	private JLabel actualPseudo;
 	
 	public PseudoPanel() {
 		super();
@@ -28,9 +29,11 @@ public class PseudoPanel extends JPanel implements ActionListener{
 		placeholder = new JLabel("Pseudo:");
 		sendButton = new JButton(GUIConfig.PSEUDO_BUTTON_TXT);
 		sendButton.addActionListener(this);
+		actualPseudo = new JLabel("Vous n'avez pas encore de pseudo");
 		add(placeholder);
 		add(input);
 		add(sendButton);
+		add(actualPseudo);
 	}
 	
 	private boolean checkPseudo(String pseudo) {
@@ -48,6 +51,7 @@ public class PseudoPanel extends JPanel implements ActionListener{
 				//Pseudo OK
 				if(LocalSystemConfig.getNetworkManagerInstance().choosePseudo(pseudo)) {
 					placeholder.setText("Pseudo:");
+					actualPseudo.setText("Votre pseudo: " + LocalSystemConfig.getNetworkManagerInstance().getPseudo());
 				}
 				//Pseudo Already Used
 				else {

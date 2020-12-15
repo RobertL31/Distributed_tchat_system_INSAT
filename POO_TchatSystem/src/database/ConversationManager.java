@@ -121,6 +121,12 @@ public class ConversationManager {
 		
 	}
 	
+	
+	
+	public ArrayList<Conversation> getConversations() {
+		return conversations;
+	}
+
 	public String toString() {
 		String res = "";
 		for(Conversation c : conversations) {
