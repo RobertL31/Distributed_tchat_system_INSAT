@@ -19,27 +19,32 @@ public class MainWindow extends JFrame{
 	
 	PseudoPanel pseudoP;
 	ConversationPanel conversationP;
+	ConnectedListPanel listP;
+	
 	
 	public MainWindow() {
 		super();
 		this.client = LocalSystemConfig.getNetworkManagerInstance();
 		setPreferredSize(GUIConfig.MAINWINDOW_DIMENSIONS);
+		
 		initComponents();
 		pack();
 		setVisible(true);
 	}
 	
 	public void test() {
-		conversationP.setConversation(client.getConvManager().getConversations().get(0));
+		listP.reloadList();
 	}
 	
 	
 	public void initComponents() {
+		
 		pseudoP = new PseudoPanel();
 		conversationP = new ConversationPanel();
+		listP = new ConnectedListPanel(conversationP);
 		
-		
-		add(pseudoP);
+		add(pseudoP, BorderLayout.NORTH);
+		add(listP, BorderLayout.WEST);
 		add(conversationP, BorderLayout.EAST);
 		
 		

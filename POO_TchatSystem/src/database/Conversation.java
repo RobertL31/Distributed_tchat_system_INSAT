@@ -40,9 +40,10 @@ public class Conversation {
 	 * @param message the message to add
 	 * @param received True if the message comes from someone, false otherwise (the client is the sender)
 	 */
-	public void addMessageToList(String message, boolean received) {
+	public Message addMessageToList(String message, boolean received) {
 		//get the database timestamp to insert the sent message in messages arraylist with the db timestamp
 		ResultSet rsTimestamp = DatabaseConfig.select(DatabaseConfig.DB_SELECT_TIME);
+		Message recvMsg = null;
 		try {
 			if(rsTimestamp.next()) {
 				int src = this.sourceIP;
@@ -53,7 +54,7 @@ public class Conversation {
 				}
 				
 				long msTime = rsTimestamp.getTimestamp(1).getTime();
-				Message recvMsg = new Message(src, dst, msTime, message);
+				recvMsg = new Message(src, dst, msTime, message);
 				messages.add(recvMsg);
 				rsTimestamp.close();
 				
@@ -64,6 +65,7 @@ public class Conversation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return recvMsg;
 	}
 	
 	public void addMessageToList(Message m) {
@@ -97,7 +99,7 @@ public class Conversation {
 		return messages;
 	}
 
-	public void send(String message){
+	public Message send(String message){
 		String toSend =   	  MessageCode.PRIVATE_MESSAGE
 				+ LocalSystemConfig.get_TCP_port()
 				+ MessageCode.SEP
@@ -119,11 +121,10 @@ public class Conversation {
 							+ "\""
 							+ ")";
 			DatabaseConfig.insert(addToDB);
-			addMessageToList(message, false);
+			return addMessageToList(message, false);
 
 		}
-
-
+		return null;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	private JScrollPane messageAreaScrollPane;
 	private JButton sendButton;
 
+	private final int coeff = 20;
 
 
 	public ConversationPanel() {
@@ -63,15 +64,17 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		//Add components
 		this.add(messageScrollPane);
 		this.add(sendMessagePanel);
-		
-		parser("bonjour je suis\nici ");
 	}
 
 	public void setConversation(Conversation c) {
 		this.conversation = c;
-		loadConversation();
+		reloadConversation();
 	}
 	
+	public Conversation getConversation() {
+		return conversation;
+	}
+
 	//\n tous les 30 caractères 
 	public ArrayList<String> parser(String message) {
 		int cnt=0;
@@ -97,33 +100,38 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		
 		return res;
 	}
+	
+	public void addMessage(Message m) {
+		ArrayList<String> parsedMessage = parser(m.getContent());
+		String finalMessage="<html>"
+				+ LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(m.getSrc()) + ": ";
+		for(String s : parsedMessage) {
+			finalMessage+=s + "<br/>";
+		}
+		finalMessage += "</html>";
+		
+		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:Color.BLACK;
+		
+		int mSize = coeff*(parsedMessage.size());
+		
+		JLabel l = new JLabel(finalMessage);
+		l.setForeground(c);			
+		l.setPreferredSize(new Dimension(500, mSize));
+		shownMessagePanel.add(l);
+		
+		shownMessagePanel.setPreferredSize(new Dimension(500, shownMessagePanel.getHeight()+mSize));
+		
+		updateUI();
+	}
 
-	public void loadConversation() {
+	public void reloadConversation() {		
 		if(conversation != null) {
-			int coeff = 40;
 			shownMessagePanel.removeAll();
 			for(Message m : conversation.getMessages()) {
-				ArrayList<String> parsedMessage = parser(m.getContent());
-				String finalMessage="<html>"
-						+ LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(m.getSrc()) + ": ";
-				for(String s : parsedMessage) {
-					finalMessage+=s + "<br/>";
-				}
-				finalMessage += "</html>";
-				
-				Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:Color.BLACK;
-				
-				JLabel l = new JLabel(finalMessage);
-				int mSize = coeff*parsedMessage.size();
-				l.setForeground(c);			
-				l.setPreferredSize(new Dimension(500, mSize));
-				shownMessagePanel.add(l);
-				
-				shownMessagePanel.setPreferredSize(new Dimension(500, shownMessagePanel.getHeight()+mSize));
+				addMessage(m);
 			}
 			JScrollBar sb = messageScrollPane.getVerticalScrollBar();
 			sb.setValue(sb.getMaximum());
-			updateUI();
 		}
 	}	
 
@@ -133,9 +141,10 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		Object performer = evt.getSource();
 		String text = messageTextArea.getText();
 		if(performer == sendButton && conversation != null && text.length() > 0) {
-			conversation.send(text);
+			Message m = conversation.send(text);
 			messageTextArea.setText("");
-			loadConversation();
+			if(m!=null)
+				addMessage(m);
 		}
 
 	}

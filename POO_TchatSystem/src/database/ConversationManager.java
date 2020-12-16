@@ -25,7 +25,7 @@ public class ConversationManager {
 	 * @param port the port of the message sender
 	 * @return the corresponding Conversation
 	 */
-	private Conversation getConversation(int port) {
+	public Conversation getConversation(int port) {
 		int dstPort;
 		for(Conversation c : conversations) {
 			dstPort = c.getDestIP();
