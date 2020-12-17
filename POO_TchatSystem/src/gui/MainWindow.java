@@ -44,7 +44,7 @@ public class MainWindow extends JFrame{
 		listP = new ConnectedListPanel(conversationP);
 		
 		add(pseudoP, BorderLayout.NORTH);
-		add(listP, BorderLayout.WEST);
+		add(listP);
 		add(conversationP, BorderLayout.EAST);
 		
 		

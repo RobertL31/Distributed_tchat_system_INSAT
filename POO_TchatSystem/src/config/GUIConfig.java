@@ -13,13 +13,33 @@ public class GUIConfig {
 	
 	// Windows dimensions (Width, Height)
 	// Main Window
-	public static final int MAINWINDOW_W = 1000;
-	public static final int MAINWINDOW_H = 500;
+	public static final int MAINWINDOW_W = 1280;
+	public static final int MAINWINDOW_H = 720;
 	public static final Dimension MAINWINDOW_DIMENSIONS = new Dimension(MAINWINDOW_W, MAINWINDOW_H);
 	
 	
-	public static final int PSEUDO_PANEL_W = 300;
-	public static final int PSEUDO_PANEL_H = 150;
+	public static final int PSEUDO_PANEL_W = MAINWINDOW_W/4;
+	public static final int PSEUDO_PANEL_H = MAINWINDOW_H/8;
 	public static final Dimension PSEUDO_PANEL_DIM = new Dimension(PSEUDO_PANEL_W, PSEUDO_PANEL_H);
+	
+	
+	//ConversationPanel
+	public static final int CONV_PANEL_W = 2*MAINWINDOW_W/3;
+	public static final int CONV_PANEL_H = 9*MAINWINDOW_H/10;
+	public static final Dimension CONV_PANEL_DIM = new Dimension(CONV_PANEL_W, CONV_PANEL_H);
+	
+	public static final int SP_CONV_PANEL_W = CONV_PANEL_W;
+	public static final int SP_CONV_PANEL_H = 3*CONV_PANEL_H/4;
+	public static final Dimension SP_CONV_PANEL_DIM = new Dimension(SP_CONV_PANEL_W, SP_CONV_PANEL_H);
+	
+	public static final int MA_CONV_PANEL_W = CONV_PANEL_W;
+	public static final int MA_CONV_PANEL_H = CONV_PANEL_H/4;
+	public static final Dimension MA_CONV_PANEL_DIM = new Dimension(MA_CONV_PANEL_W, MA_CONV_PANEL_H);
+	
+	public static final int MTA_CONV_PANEL_W = 3*MA_CONV_PANEL_W/4;
+	public static final int MTA_CONV_PANEL_H = 4*MA_CONV_PANEL_H/5;
+	public static final Dimension MTA_CONV_PANEL_DIM = new Dimension(MTA_CONV_PANEL_W, MTA_CONV_PANEL_H);
+	
+	public static final int MAX_CHAR_PER_LINE = 40;
 	
 }

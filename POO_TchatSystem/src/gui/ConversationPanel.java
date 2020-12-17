@@ -6,8 +6,13 @@ import java.awt.Dimension;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,7 +22,9 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ListModel;
+import javax.swing.SwingConstants;
 
+import config.GUIConfig;
 import config.LocalSystemConfig;
 import database.Conversation;
 import database.Message;
@@ -28,6 +35,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	private Conversation conversation = null;
 	private JPanel shownMessagePanel;
 	private JScrollPane messageScrollPane;
+	private long lastMessageTime;
 
 	private JPanel sendMessagePanel;
 	private JTextArea messageTextArea;
@@ -39,21 +47,23 @@ public class ConversationPanel extends JPanel implements ActionListener{
 
 	public ConversationPanel() {
 		super();
-		this.setPreferredSize(new Dimension( 600, 600));
-
+		this.setPreferredSize(GUIConfig.CONV_PANEL_DIM);
+		lastMessageTime = 0;
 		//Conversation area
 		shownMessagePanel = new JPanel();
+		shownMessagePanel.setLayout(new BoxLayout(shownMessagePanel, BoxLayout.Y_AXIS));
 		shownMessagePanel.setBackground(Color.WHITE);
+		shownMessagePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		messageScrollPane = new JScrollPane(shownMessagePanel);
 		messageScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		messageScrollPane.setPreferredSize(new Dimension(500, 300));
+		messageScrollPane.setPreferredSize(GUIConfig.SP_CONV_PANEL_DIM);
 		messageScrollPane.setAutoscrolls(true);
 
 		//Send message Areas
 		sendMessagePanel = new JPanel();
-		sendMessagePanel.setPreferredSize(new Dimension(500, 200));
+		sendMessagePanel.setPreferredSize(GUIConfig.MA_CONV_PANEL_DIM);
 		messageTextArea = new JTextArea("");
-		messageTextArea.setPreferredSize(new Dimension(300, 50));
+		messageTextArea.setPreferredSize(GUIConfig.MTA_CONV_PANEL_DIM);
 		messageTextArea.setLineWrap(true);
 		sendButton = new JButton("Envoyer");
 		sendButton.addActionListener(this);
@@ -82,57 +92,99 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		String[] splited = message.split("[\\s]");
 		ArrayList<String> res = new ArrayList<String>();
 		for(String s : splited) {
-			if(cnt+s.length()+1<30) {
-				cnt+=s.length();
-				tmpLine+=s + " ";
-				
+			if(s.length() >= GUIConfig.MAX_CHAR_PER_LINE) {
+				int parts = (s.length() / GUIConfig.MAX_CHAR_PER_LINE)+1;
+				for(int i=0; i<parts-1; ++i) {
+					res.add(s.substring(i*GUIConfig.MAX_CHAR_PER_LINE, (i+1)*GUIConfig.MAX_CHAR_PER_LINE));
+				}
+				res.add(s.substring((parts-1)*GUIConfig.MAX_CHAR_PER_LINE));
+			}
+			else if(s.length() + cnt + 1 <= GUIConfig.MAX_CHAR_PER_LINE) {
+				cnt += s.length()+1;
+				tmpLine += s + " ";
 			}
 			else {
-				res.add(new String(tmpLine));
-				tmpLine = "";
+				res.add(tmpLine);
 				cnt=0;
 			}
 		}
-		
-		if(cnt < 30){
-			res.add(new String(tmpLine));
+		if(cnt <= GUIConfig.MAX_CHAR_PER_LINE) {
+			res.add(tmpLine);
 		}
-		
 		return res;
 	}
 	
 	public void addMessage(Message m) {
+		
+		
+		////////////// Show date every new Day //////////////
+		Calendar lastMessageCalendar = Calendar.getInstance();
+		lastMessageCalendar.setTimeInMillis(lastMessageTime);
+		int lDay, lMonth, lYear;
+		lDay = lastMessageCalendar.get(Calendar.DAY_OF_MONTH);
+		lMonth = lastMessageCalendar.get(Calendar.MONTH);
+		lYear = lastMessageCalendar.get(Calendar.YEAR);
+		
+		lastMessageCalendar.setTimeInMillis(m.getTime());
+		int mDay, mMonth, mYear;
+		mDay = lastMessageCalendar.get(Calendar.DAY_OF_MONTH);
+		mMonth = lastMessageCalendar.get(Calendar.MONTH);
+		mYear = lastMessageCalendar.get(Calendar.YEAR);
+		
+		
+		if(mDay != lDay
+			|| (mMonth != lMonth)
+			|| (mYear != lYear)) {
+			
+			SimpleDateFormat ft = new SimpleDateFormat ("E dd.MM.yyyy");
+			JLabel dayLabel = new JLabel("<html><div style='text-align: center;'>" + ft.format(new Date(m.getTime()))+ "</div></html>", SwingConstants.CENTER);
+			dayLabel.setForeground(Color.RED);
+			lastMessageTime = m.getTime();
+			shownMessagePanel.add(dayLabel);
+		}
+		////////////////////////////////////////////////////////
+		
+		
+		////////////// Show message ////////////////////////////
+		SimpleDateFormat ft = new SimpleDateFormat("kk:mm");
 		ArrayList<String> parsedMessage = parser(m.getContent());
-		String finalMessage="<html>"
-				+ LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(m.getSrc()) + ": ";
+		/*for(String s : parsedMessage) {
+			System.out.println(s);
+		}*/
+		
+		String srcPseudo = LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(m.getSrc());
+		
+		String tab = "&nbsp;".repeat(2*(8+srcPseudo.length()));
+		String finalMessage="<html>" 
+				+ "[" + ft.format(new Date(m.getTime())) + "] "
+				+ srcPseudo + ": ";
 		for(String s : parsedMessage) {
-			finalMessage+=s + "<br/>";
+			finalMessage+=s + "<br/>" + tab;
 		}
 		finalMessage += "</html>";
 		
-		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:Color.BLACK;
-		
-		int mSize = coeff*(parsedMessage.size());
+		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:Color.ORANGE;
 		
 		JLabel l = new JLabel(finalMessage);
 		l.setForeground(c);			
-		l.setPreferredSize(new Dimension(500, mSize));
 		shownMessagePanel.add(l);
 		
-		shownMessagePanel.setPreferredSize(new Dimension(500, shownMessagePanel.getHeight()+mSize));
+		messageScrollPane.validate();
+		JScrollBar sb = messageScrollPane.getVerticalScrollBar();
+		sb.setValue(sb.getMaximum());
 		
 		updateUI();
 	}
 
-	public void reloadConversation() {		
+	public void reloadConversation() {
+		lastMessageTime = 0;
 		if(conversation != null) {
 			shownMessagePanel.removeAll();
 			for(Message m : conversation.getMessages()) {
 				addMessage(m);
 			}
-			JScrollBar sb = messageScrollPane.getVerticalScrollBar();
-			sb.setValue(sb.getMaximum());
 		}
+		updateUI();
 	}	
 
 

@@ -36,12 +36,13 @@ public class ConnectedListPanel extends JPanel{
 	public void reloadList() {
 		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
 		ArrayList<String> pseudoList =  new ArrayList<String>(client.getM_IP_Pseudo_Table().values());
+		ArrayList<String> clone = new ArrayList<String>(pseudoList);
 		int i;
 		boolean found;
 		for(JLabel l : connectedList) {
 			i=0;
 			found = false;
-			for(String pseudo : pseudoList) {
+			for(String pseudo : clone) {
 				if(pseudo.equals(l.getText())) {
 					pseudoList.remove(i);
 					found = true;
