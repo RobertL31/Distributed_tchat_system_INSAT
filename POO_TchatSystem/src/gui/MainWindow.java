@@ -36,6 +36,10 @@ public class MainWindow extends JFrame{
 		listP.reloadList();
 	}
 	
+	public void test2() {
+		conversationP.updateConversation();
+	}
+	
 	
 	public void initComponents() {
 		

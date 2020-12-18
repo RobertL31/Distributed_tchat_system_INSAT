@@ -10,6 +10,10 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -36,6 +40,10 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	private JPanel shownMessagePanel;
 	private JScrollPane messageScrollPane;
 	private long lastMessageTime;
+	
+	//to update
+	private Timer timer;
+	private int displayedMessagesNb;
 
 	private JPanel sendMessagePanel;
 	private JTextArea messageTextArea;
@@ -47,8 +55,25 @@ public class ConversationPanel extends JPanel implements ActionListener{
 
 	public ConversationPanel() {
 		super();
+		
 		this.setPreferredSize(GUIConfig.CONV_PANEL_DIM);
+		
+		//to update
 		lastMessageTime = 0;
+		displayedMessagesNb = 0;
+		
+		timer = new Timer();
+		
+		//empty task
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if(conversation != null) {
+					updateConversation();
+				}
+			}
+		}, 0, 100);
+		
 		//Conversation area
 		shownMessagePanel = new JPanel();
 		shownMessagePanel.setLayout(new BoxLayout(shownMessagePanel, BoxLayout.Y_AXIS));
@@ -78,7 +103,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 
 	public void setConversation(Conversation c) {
 		this.conversation = c;
-		reloadConversation();
+		loadConversation();
 	}
 	
 	public Conversation getConversation() {
@@ -114,7 +139,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		return res;
 	}
 	
-	public void addMessage(Message m) {
+	private void addMessage(Message m) {
 		
 		
 		////////////// Show date every new Day //////////////
@@ -173,19 +198,39 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		JScrollBar sb = messageScrollPane.getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());
 		
+		//Add message to the list of displayed messages (at index 0 because the list is reversed
+		displayedMessagesNb++;
+		
+		
 		updateUI();
 	}
 
-	public void reloadConversation() {
+	public void loadConversation() {
 		lastMessageTime = 0;
+		displayedMessagesNb = 0;
 		if(conversation != null) {
 			shownMessagePanel.removeAll();
 			for(Message m : conversation.getMessages()) {
 				addMessage(m);
 			}
 		}
+		
 		updateUI();
-	}	
+	}
+	
+	public void updateConversation() {
+		ArrayList<Message> allMessages = (ArrayList<Message>) conversation.getMessages().clone();
+		int allMsgNb = allMessages.size();
+		
+		// There's new message(s) (else, return);
+		if(displayedMessagesNb < allMsgNb) {
+			Collections.reverse(allMessages);
+			int newMsgNb = allMsgNb - displayedMessagesNb;
+			for(int i=newMsgNb; i>0; i--) {
+				addMessage(allMessages.get(i-1));
+			}
+		}
+	}
 
 
 	@Override

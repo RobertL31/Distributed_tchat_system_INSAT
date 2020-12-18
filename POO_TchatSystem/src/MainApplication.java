@@ -29,7 +29,7 @@ public class MainApplication {
 		client.discoverNetwork();
 
 
-		System.out.println("cmd: printlist | pseudo | send | printconv | disconnect | test");
+		System.out.println("cmd: printlist | pseudo | send | printconv | disconnect | test | up");
 		while(true)
 		{
 			
@@ -64,6 +64,9 @@ public class MainApplication {
 			
 			else if(in.equals("test")) {
 				app.test();
+			}
+			else if(in.equals("up")) {
+				app.test2();
 			}
 			
 		}
