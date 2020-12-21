@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public final class DatabaseConfig {
-	public static final String DB_USR = "insaclient";
-	public static final String DB_PSW = "insa";
-	public static final String DB_URL = "jdbc:mysql://localhost:3306/INSA_POO";
+	public static final String DB_USR = "tp_servlet_004";
+	public static final String DB_PSW = "Ua2wae0g";
+	public static final String DB_URL = "jdbc:mysql://srv-bdens.insa-toulouse.fr/tp_servlet_004";
 	public static final String DB_TABLE_NAME = "Messages";
 	
 	public static final String DB_SELECT_TIME = "SELECT CURRENT_TIMESTAMP";
