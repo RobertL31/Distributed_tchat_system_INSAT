@@ -122,7 +122,6 @@ public class Conversation {
 							+ ")";
 			DatabaseConfig.insert(addToDB);
 			return addMessageToList(message, false);
-
 		}
 		return null;
 	}

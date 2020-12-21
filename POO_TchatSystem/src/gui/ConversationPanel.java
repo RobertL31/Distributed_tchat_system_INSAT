@@ -72,7 +72,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 					updateConversation();
 				}
 			}
-		}, 0, 100);
+		}, 0, 250);
 		
 		//Conversation area
 		shownMessagePanel = new JPanel();
@@ -197,12 +197,6 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		messageScrollPane.validate();
 		JScrollBar sb = messageScrollPane.getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());
-		
-		//Add message to the list of displayed messages (at index 0 because the list is reversed
-		displayedMessagesNb++;
-		
-		
-		updateUI();
 	}
 
 	public void loadConversation() {
@@ -210,26 +204,24 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		displayedMessagesNb = 0;
 		if(conversation != null) {
 			shownMessagePanel.removeAll();
-			for(Message m : conversation.getMessages()) {
-				addMessage(m);
-			}
 		}
-		
 		updateUI();
 	}
 	
 	public void updateConversation() {
+		@SuppressWarnings("unchecked")
 		ArrayList<Message> allMessages = (ArrayList<Message>) conversation.getMessages().clone();
 		int allMsgNb = allMessages.size();
-		
 		// There's new message(s) (else, return);
 		if(displayedMessagesNb < allMsgNb) {
 			Collections.reverse(allMessages);
 			int newMsgNb = allMsgNb - displayedMessagesNb;
 			for(int i=newMsgNb; i>0; i--) {
 				addMessage(allMessages.get(i-1));
+				displayedMessagesNb++;
 			}
 		}
+		updateUI();
 	}
 
 
@@ -238,10 +230,8 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		Object performer = evt.getSource();
 		String text = messageTextArea.getText();
 		if(performer == sendButton && conversation != null && text.length() > 0) {
-			Message m = conversation.send(text);
+			conversation.send(text);
 			messageTextArea.setText("");
-			if(m!=null)
-				addMessage(m);
 		}
 
 	}

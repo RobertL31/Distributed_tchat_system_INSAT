@@ -2,3 +2,4 @@
 /ConversationManager.class
 /DatabaseConfig.class
 /Message.class
+/disconnectedUserException.class

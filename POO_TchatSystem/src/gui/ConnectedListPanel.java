@@ -3,9 +3,13 @@ package gui;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -16,61 +20,78 @@ import database.Conversation;
 import network.NetworkManager;
 
 public class ConnectedListPanel extends JPanel{
-	
+
 	private JScrollPane scrollPane;
 	private JPanel listPanel;
-	private ArrayList<JLabel> connectedList;
+	private ArrayList<User> connectedList;
 	private ConversationPanel conversationPanel;
-	
+	private Timer timer;
+
+
 	public ConnectedListPanel(ConversationPanel conversationPanel) {
 		super();		
 		this.conversationPanel = conversationPanel;
 		this.setPreferredSize(new Dimension(300, 500));
 		listPanel = new JPanel();
+		listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 		scrollPane = new JScrollPane(listPanel);
 		scrollPane.setPreferredSize(new Dimension(300, 500));
-		connectedList = new ArrayList<JLabel>();
+		connectedList = new ArrayList<User>();
 		this.add(scrollPane);
+
+		// Update list
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				reloadList();
+			}
+		}, 0, 250);
+
+
 	}
-	
+
 	public void reloadList() {
-		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
-		ArrayList<String> pseudoList =  new ArrayList<String>(client.getM_IP_Pseudo_Table().values());
-		ArrayList<String> clone = new ArrayList<String>(pseudoList);
-		int i;
-		boolean found;
-		for(JLabel l : connectedList) {
-			i=0;
-			found = false;
-			for(String pseudo : clone) {
-				if(pseudo.equals(l.getText())) {
-					pseudoList.remove(i);
-					found = true;
-				}
-				i++;
-			}
-			if(!found) {
-				listPanel.remove(l);
-				connectedList.remove(l);
+		ArrayList<Integer> actualizedList = new ArrayList<Integer>(LocalSystemConfig.getNetworkManagerInstance().getM_IP_Pseudo_Table().keySet());
+		@SuppressWarnings("unchecked")
+		ArrayList<User> connectedListClone = (ArrayList<User>) connectedList.clone();
+
+		//Remove disconnected users
+		for(User user : connectedListClone) {
+			if(!actualizedList.contains(user.getPort())) {
+				connectedList.remove(user);
+				listPanel.remove(user);
 			}
 		}
-		
-		for(String pseudo : pseudoList) {
-			JLabel toAdd = new JLabel(pseudo);
-			toAdd.addMouseListener(new MouseAdapter()  
-			{  
-			    public void mouseClicked(MouseEvent e)  
-			    {  
-			    	int port = client.getPortFromPseudo(pseudo);
-			    	Conversation c = client.getConvManager().getConversation(port);
-			    	conversationPanel.setConversation(c);
-			    	
-			    }
-			});
-			connectedList.add(toAdd);
-			listPanel.add(toAdd);
+
+		ArrayList<Integer> connectedPortList = new ArrayList<Integer>();
+		//init connectedPortList
+		for(User user : connectedList) {
+			connectedPortList.add(user.getPort());
 		}
+
+		//Add new users
+		for(int userPort : actualizedList) {
+			if(!connectedPortList.contains(userPort) 
+					&& !LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(userPort).equals(LocalSystemConfig.UNKNOWN_USERNAME)) {
+				User newUser = new User(userPort);
+				newUser.getPseudoLabel().addMouseListener(
+						new MouseAdapter()  
+						{  
+							public void mouseClicked(MouseEvent e)  
+							{  
+								Conversation c = LocalSystemConfig.getNetworkManagerInstance().getConvManager().getConversation(userPort);
+								conversationPanel.setConversation(c);
+
+							}
+						});
+				connectedList.add(newUser);
+				listPanel.add(newUser);
+			}
+		}
+
 		updateUI();
+
 	}
-	
+
 }
