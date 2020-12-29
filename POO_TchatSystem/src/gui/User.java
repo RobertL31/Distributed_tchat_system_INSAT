@@ -21,10 +21,9 @@ public class User extends JPanel{
 		this.pseudo = new JLabel(LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(port));
 		this.port = port;
 		this.newMessage = false;
-		pseudo.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
 		this.add(this.pseudo);
 	}
-
+	
 
 	public JLabel getPseudoLabel() {
 		return pseudo;

@@ -3,6 +3,8 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -51,6 +53,18 @@ public class MainWindow extends JFrame{
 		add(listP);
 		add(conversationP, BorderLayout.EAST);
 		
-		
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent event) {
+		        exitProgram();
+		    }
+		});
+	}
+	
+	private void exitProgram() {
+		this.dispose();
+		client.disconnect();
+		System.exit(0);
 	}
 }

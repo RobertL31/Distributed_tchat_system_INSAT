@@ -109,6 +109,16 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	public Conversation getConversation() {
 		return conversation;
 	}
+	
+	
+
+	public JPanel getShownMessagePanel() {
+		return shownMessagePanel;
+	}
+
+	public void setShownMessagePanel(JPanel shownMessagePanel) {
+		this.shownMessagePanel = shownMessagePanel;
+	}
 
 	//\n tous les 30 caractères 
 	public ArrayList<String> parser(String message) {
@@ -188,7 +198,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		}
 		finalMessage += "</html>";
 		
-		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:Color.ORANGE;
+		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:(new Color(0, 153, 0));
 		
 		JLabel l = new JLabel(finalMessage);
 		l.setForeground(c);			
