@@ -39,7 +39,7 @@ public class PseudoPanel extends JPanel implements ActionListener{
 	private boolean checkPseudo(String pseudo) {
 		return pseudo.length() >= GUIConfig.MIN_PSEUDO_LEN 
 				&& pseudo.length() <= GUIConfig.MAX_PSEUDO_LEN
-				&& pseudo.matches("[A-Za-z0-9]+"); //Allow alphanumeric char only
+				&& pseudo.matches("[A-Za-z0-9_]+"); //Allow alphanumeric char only
 	}
 
 	@Override

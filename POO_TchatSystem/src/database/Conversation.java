@@ -17,6 +17,7 @@ public class Conversation {
 	private ArrayList<Message> messages;
 	private Connection con;
 
+	
 	// Constructor for new conversation
 	public Conversation(int destIP){
 		this.destIP = destIP;

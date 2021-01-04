@@ -9,5 +9,5 @@ JARFILE="client.jar"
 #launch prgrm
 for N in $(seq $NBCLIENTS) ; do
 	ID="client$N"
-	xterm -hold -T $ID -e java -jar client.jar &
+	java -jar client.jar &
 done

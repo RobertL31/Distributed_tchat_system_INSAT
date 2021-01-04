@@ -36,7 +36,7 @@ import database.Message;
 @SuppressWarnings("serial")
 public class ConversationPanel extends JPanel implements ActionListener{
 
-	private Conversation conversation = null;
+	private Conversation conversation;
 	private JPanel shownMessagePanel;
 	private JScrollPane messageScrollPane;
 	private long lastMessageTime;
@@ -83,7 +83,9 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		messageScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		messageScrollPane.setPreferredSize(GUIConfig.SP_CONV_PANEL_DIM);
 		messageScrollPane.setAutoscrolls(true);
-
+		shownMessagePanel.add(new JLabel("Cliquez sur un utilisateur pour démarrer une conversation !"));
+		
+		
 		//Send message Areas
 		sendMessagePanel = new JPanel();
 		sendMessagePanel.setPreferredSize(GUIConfig.MA_CONV_PANEL_DIM);
@@ -99,6 +101,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		//Add components
 		this.add(messageScrollPane);
 		this.add(sendMessagePanel);
+		
 	}
 
 	public void setConversation(Conversation c) {
@@ -172,7 +175,9 @@ public class ConversationPanel extends JPanel implements ActionListener{
 			|| (mYear != lYear)) {
 			
 			SimpleDateFormat ft = new SimpleDateFormat ("E dd.MM.yyyy");
-			JLabel dayLabel = new JLabel("<html><div style='text-align: center;'>" + ft.format(new Date(m.getTime()))+ "</div></html>", SwingConstants.CENTER);
+			JLabel dayLabel = new JLabel("<html><div style='text-align: center;'>" 
+							+ ft.format(new Date(m.getTime())) 
+							+ "</div></html>", SwingConstants.CENTER);
 			dayLabel.setForeground(Color.RED);
 			lastMessageTime = m.getTime();
 			shownMessagePanel.add(dayLabel);
