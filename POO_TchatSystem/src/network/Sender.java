@@ -33,8 +33,14 @@ public class Sender {
 
 	public static boolean send(String msg, int port){
 		Socket sock;
+		int dstPort = port;
+		
 		try {
-			sock = new Socket(InetAddress.getLocalHost(), port);
+			if(port > 100000) {
+				dstPort = LocalSystemConfig.PRESENCE_SERVER_PORT;
+				msg += MessageCode.SEP + port;
+			}
+			sock = new Socket(InetAddress.getLocalHost(), dstPort);
 			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);
 			out.println(msg);
 			out.flush();

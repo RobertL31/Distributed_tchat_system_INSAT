@@ -112,6 +112,9 @@ public class NetworkManager {
 		//Send a UDP datagram to notify all the network
 		String msg = MessageCode.NOTIFY_JOIN;
 		UDPBroadcast(msg);
+		
+		//Ask the presence server
+		
 	}
 	
 	public void disconnect() {

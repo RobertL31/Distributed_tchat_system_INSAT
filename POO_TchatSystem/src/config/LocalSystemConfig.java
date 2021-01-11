@@ -31,6 +31,8 @@ public final class LocalSystemConfig {
 	public static final int SLEEP_TIME = 300;
 
 	public static final int UDP_MESSAGE_MAXLENGTH = 256;
+	
+	public static final int PRESENCE_SERVER_PORT = 65000;
 
 	public static DatagramSocket m_UDP_socket = null;
 	public static ServerSocket m_TCP_socket = null;	
