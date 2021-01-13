@@ -244,6 +244,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	public void actionPerformed(ActionEvent evt) {
 		Object performer = evt.getSource();
 		String text = messageTextArea.getText();
+		text = text.replaceAll("\n", "<br/>");
 		if(performer == sendButton && conversation != null && text.length() > 0) {
 			conversation.send(text);
 			messageTextArea.setText("");
