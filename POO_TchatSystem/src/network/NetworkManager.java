@@ -12,39 +12,44 @@ import config.LocalSystemConfig;
 import database.ConversationManager;
 
 public class NetworkManager {
-	
+
 	public HashMap<Integer, String> m_IP_Pseudo_Table = new HashMap<>();
 	public ArrayList<Socket> socketList;
 	private Sender m_sender;
 	private UDPReceiver m_receiver_UDP;
 	private ConversationManager convManager;
 	private TCPAccepter accepter;
-	
+
 	private boolean validPseudo = true;
-	
+
 	private String pseudo = LocalSystemConfig.UNKNOWN_USERNAME;
 
-	public NetworkManager() {
+	public boolean isExternal;
+
+
+
+	public NetworkManager(boolean isExternal) {
 		super();
+		this.isExternal = isExternal;
+	}
+
+	// sender / receivers need a reference to the NetworkManager as they are threads, 
+	// if they process before the network manager is initialized -> null reference
+	public void init() {
 
 		//Open a listening UDP port
 		LocalSystemConfig.openUDPServer();
 		LocalSystemConfig.openTCPServer();
-		
+
 		//Connect to database (Move to ConversationManager)
 		DatabaseConfig.connectToDatabase();
 
-	}
-	
-	// sender / receivers need a reference to the NetworkManager as they are threads, 
-	// if they process before the network manager is initialized -> null reference
-	public void init() {
 		this.socketList = new ArrayList<Socket>();
 		this.m_sender = new Sender();
 		this.m_receiver_UDP =  new UDPReceiver();
 		this.accepter = new TCPAccepter();
 		this.convManager = new ConversationManager();
-		
+
 		//Launch UDP/TCP receiver thread
 		initThreads();
 	}
@@ -72,7 +77,11 @@ public class NetworkManager {
 	public Sender getM_sender() {
 		return m_sender;
 	}
-	
+
+	public boolean isExternal() {
+		return isExternal;
+	}
+
 	public int getPortFromPseudo(String pseudo) {
 		String username;
 		Set<Integer> keys = m_IP_Pseudo_Table.keySet();
@@ -83,7 +92,7 @@ public class NetworkManager {
 		}
 		return -1;
 	}
-	
+
 	public String getPseudoFromPort(int port) {
 		if(port == LocalSystemConfig.get_TCP_port()) 
 			return this.pseudo;
@@ -95,9 +104,10 @@ public class NetworkManager {
 		m_receiver_UDP.start();
 	}
 
-	
+
 	public void UDPBroadcast(String message) {
 		for(int i=LocalSystemConfig.START_PORT; i<=LocalSystemConfig.END_PORT; ++i) {
+			//System.out.println("here, UDP sent to : " + i );
 			if(i != LocalSystemConfig.get_UDP_port()) {
 				try {
 					m_sender.send(Sender.createUDPDatagram(message, i));
@@ -107,22 +117,20 @@ public class NetworkManager {
 			}
 		}
 	}
-	
+
 	public void discoverNetwork() {
 		//Send a UDP datagram to notify all the network
 		String msg = MessageCode.NOTIFY_JOIN;
 		UDPBroadcast(msg);
-		
-		//Ask the presence server
-		
+
 	}
-	
+
 	public void disconnect() {
 		String msg = MessageCode.NOTIFY_LEAVE;
 		UDPBroadcast(msg);
 	}
-	
-	
+
+
 	public boolean choosePseudo(String pseudo) {
 		this.setPseudo(pseudo);
 		boolean ret = m_sender.sendPseudoRequest();
@@ -138,7 +146,7 @@ public class NetworkManager {
 	public void setValidPseudo(boolean validPseudo) {
 		this.validPseudo = validPseudo;
 	}
-	
+
 	public void sendPM(String pseudo, String message) {
 		if(pseudo.equals(LocalSystemConfig.UNKNOWN_USERNAME)) {
 			System.out.println("Illegal pseudo");

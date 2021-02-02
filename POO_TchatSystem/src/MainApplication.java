@@ -9,7 +9,12 @@ import network.NetworkManager;
 public class MainApplication {
 
 	public static void main(String[] args) {
-		LocalSystemConfig.initialize();
+		
+		System.out.println("Are you outside ? (y/n)");
+		Scanner askInside = new Scanner(System.in);
+		
+		
+		LocalSystemConfig.initialize(askInside.nextLine().equals("y"));
 		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
 		
 		///////// GUI Version //////////

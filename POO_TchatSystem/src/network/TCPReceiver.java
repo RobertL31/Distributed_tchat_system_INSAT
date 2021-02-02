@@ -35,10 +35,18 @@ public class TCPReceiver extends Thread{
 
 	private void processMessage(String message) {
 		if(message == null) return;
+		
+		int srcPort = 0;
+		if(message.startsWith(MessageCode.FROM_SERVER)) {
+			System.out.println("Here : received tcp from server");
+			srcPort += 100000;
+			message = message.substring(MessageCode.FROM_SERVER.length());
+		}
+		
 		if(message.startsWith(MessageCode.ASK_CHANGE_PSEUDO)) {
 			message = message.substring(MessageCode.ASK_CHANGE_PSEUDO.length());
 			String[] answer = message.split(MessageCode.SEP);
-			int srcPort = Integer.valueOf(answer[0]);
+			srcPort += Integer.valueOf(answer[0]);
 			String pseudo = answer[1];
 			boolean isValid = !pseudo.equals(client.getPseudo());
 
@@ -55,9 +63,9 @@ public class TCPReceiver extends Thread{
 		else if(message.startsWith(MessageCode.NOTIFY_CHANGE_PSEUDO)) {
 			String answer = message.substring(MessageCode.NOTIFY_CHANGE_PSEUDO.length());
 			String[] ansArray = answer.split(MessageCode.SEP);
-			int port = Integer.valueOf(ansArray[0]);
+			srcPort += Integer.valueOf(ansArray[0]);
 			String pseudo = ansArray[1];
-			client.getM_IP_Pseudo_Table().put(port, pseudo);
+			client.getM_IP_Pseudo_Table().put(srcPort, pseudo);
 			
 			//Send my pseudo
 			String reply = MessageCode.TELL_PSEUDO 
@@ -65,21 +73,21 @@ public class TCPReceiver extends Thread{
 					+ MessageCode.SEP
 					+ client.getPseudo()
 					;
-			Sender.send(reply, port);
+			Sender.send(reply, srcPort);
 		}
 		else if(message.startsWith(MessageCode.TELL_PSEUDO)) {
 			String answer = message.substring(MessageCode.TELL_PSEUDO.length());
 			String[] ansArray = answer.split(MessageCode.SEP);
-			int port = Integer.valueOf(ansArray[0]);
+			srcPort += Integer.valueOf(ansArray[0]);
 			String distPseudo = ansArray[1];
-			client.getM_IP_Pseudo_Table().put(port, distPseudo);
+			client.getM_IP_Pseudo_Table().put(srcPort, distPseudo);
 		}
 		else if(message.startsWith(MessageCode.PRIVATE_MESSAGE)){
 			String answer = message.substring(MessageCode.PRIVATE_MESSAGE.length());
 			String[] ansArray = answer.split(MessageCode.SEP);
-			int port = Integer.valueOf(ansArray[0]);
+			srcPort += Integer.valueOf(ansArray[0]);
 			String content = ansArray[1];
-			client.getConvManager().receive(content, port);
+			client.getConvManager().receive(content, srcPort);
 		}
 	}
 

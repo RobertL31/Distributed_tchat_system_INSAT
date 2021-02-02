@@ -49,6 +49,13 @@ public class UDPReceiver extends Thread{
 	public void processMessage(Pair<String, Integer> recepted) {
 		String msg = recepted.getFirst();
 		int srcPort = recepted.getSecond();
+		int destinationPort = recepted.getSecond();
+		
+		if(srcPort == LocalSystemConfig.PRESENCE_SERVER_PORT) {
+			String extSrcPort = msg.split(MessageCode.SEP)[0];
+			srcPort = Integer.valueOf(extSrcPort) + 100000;
+			msg = msg.substring(extSrcPort.length() + MessageCode.SEP.length());
+		}
 
 		//for TCP communications//
 		Socket sock;
@@ -66,7 +73,7 @@ public class UDPReceiver extends Thread{
 			client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 			try {
 				//Notify that i'm here too
-				client.getM_sender().send(Sender.createUDPDatagram(respMsg, srcPort));
+				client.getM_sender().send(Sender.createUDPDatagram(respMsg, destinationPort));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

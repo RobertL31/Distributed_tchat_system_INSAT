@@ -1,5 +1,7 @@
 package network;
 
+///////////////////// SERVER RECEIVER /////////////////
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +13,9 @@ public class TCPReceiver extends Thread{
 
 	private NetworkManager client;
 	private Socket listeningSocket;
+	
+	public static final String SEP = "#separator#"; //NOT A NUMBER OR CHAR
+	public static final String FROM_SERVER = "#fromserver#"; //NOT A NUMBER OR CHAR
 
 	TCPReceiver(NetworkManager client, Socket listeningSocket){
 		this.client = client;
@@ -28,11 +33,25 @@ public class TCPReceiver extends Thread{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return msg;
 	}
 
 	private void processMessage(String message) {
 		if(message == null) return;
+		
+		String[] separated = message.split(SEP);
+		System.out.println(message);
+		int destPort = Integer.valueOf(separated[0]);
+		
+		//  Dest SEP Message
+		message = message.substring(message.indexOf(SEP) + SEP.length());
+		message = FROM_SERVER + message;
+		
+		
+		TCPSender.send(message, destPort);
+		
+		System.out.println("\"" + message + "\"" + "sent to " + destPort);
 		
 	}
 

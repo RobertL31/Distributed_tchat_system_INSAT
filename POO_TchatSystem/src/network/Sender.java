@@ -36,9 +36,10 @@ public class Sender {
 		int dstPort = port;
 		
 		try {
+			if (port == LocalSystemConfig.PRESENCE_SERVER_PORT) return false;
 			if(port > 100000) {
 				dstPort = LocalSystemConfig.PRESENCE_SERVER_PORT;
-				msg += MessageCode.SEP + port;
+				msg = (port - 100000) + MessageCode.SEP + msg;
 			}
 			sock = new Socket(InetAddress.getLocalHost(), dstPort);
 			PrintWriter out = new PrintWriter(sock.getOutputStream(),true);

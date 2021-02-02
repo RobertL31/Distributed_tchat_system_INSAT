@@ -19,15 +19,7 @@ public class TCPSender {
 			sock.close();
 			return true;
 		} catch (IOException e) {
-			//If send fail => target not connected => remove from the connected list
-			int index = -1;
-			for(int i=0; i<NetworkManager.connectedList.size(); i++) {
-				if(port == NetworkManager.connectedList.get(i)) {
-					index = i;
-					break;
-				}
-			}
-			NetworkManager.connectedList.remove(index);
+			
 			return false;
 		}
 	}

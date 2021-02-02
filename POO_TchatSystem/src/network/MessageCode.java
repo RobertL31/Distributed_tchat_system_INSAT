@@ -6,6 +6,8 @@ public final class MessageCode {
 	
 	public static final String SEP = "#separator#"; //NOT A NUMBER OR CHAR
 	
+	public static final String FROM_SERVER = "#fromserver#"; //NOT A NUMBER OR CHAR
+	
 	//Discover codes
 	public static final String NOTIFY_JOIN = "new";
 	public static final String NOTIFY_REPLY = "reply";
