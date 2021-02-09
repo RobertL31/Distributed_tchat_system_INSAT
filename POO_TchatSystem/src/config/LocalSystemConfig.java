@@ -42,7 +42,7 @@ public final class LocalSystemConfig {
 
 	public static void openUDPServer() {
 		
-		int start_port = START_PORT;
+		int start_port = START_PORT+1;
 		int end_port = END_PORT;
 		
 		if(client.isExternal) {

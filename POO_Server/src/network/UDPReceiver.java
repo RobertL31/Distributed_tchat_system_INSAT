@@ -16,13 +16,13 @@ public class UDPReceiver extends Thread{
 
 	private DatagramSocket m_UDP_socket;
 	private NetworkManager client;
-	
+
 	public static int START_PORT_GENERAL = 64000;
 	public static int END_PORT_GENERAL = 65100;
-	
+
 	public static int START_PORT_EXT = START_PORT_GENERAL;
 	public static int END_PORT_EXT = 64999;
-	
+
 	public static int START_PORT_IN = 65001;
 	public static int END_PORT_IN = END_PORT_GENERAL;
 
@@ -30,12 +30,12 @@ public class UDPReceiver extends Thread{
 		this.m_UDP_socket = client.UDPSocket;
 		this.client = client;
 	}
-	
+
 	public static boolean isExtPort(int port) {
 		return ((port >= START_PORT_EXT) && (port <= END_PORT_EXT));
 	}
-	
-	
+
+
 	public static DatagramPacket createUDPDatagram(String message, int port) throws IOException {
 		byte[] buff = message.getBytes();
 		return new DatagramPacket(buff, buff.length, InetAddress.getLocalHost(), port);
@@ -58,8 +58,8 @@ public class UDPReceiver extends Thread{
 		// Remove unused bytes (because buffer size >= data transmitted size)
 		message = message.substring(0, recv.getLength());
 		message = senderPort + TCPReceiver.SEP + message;
-				
-		
+
+
 		int start;
 		int end;		
 		//External user : send to everyone (EXT + IN)
@@ -72,21 +72,42 @@ public class UDPReceiver extends Thread{
 			start = START_PORT_EXT;
 			end = END_PORT_EXT;
 		}
+
+		System.out.println("[UDP] Received : " + message);
+
+
+		String[] splitString = message.split(TCPReceiver.SEP);
 		
-		for(int i=start; i<=end; i++) {
-			if(i != client.UDPSocket.getLocalPort() && i != recv.getPort()) {
-				try {
-					client.UDPSocket.send(createUDPDatagram(message, i));
-					//System.out.println("Diustributed to : " + i);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		System.out.println("[UDP] Received : " + message + "length = " + splitString.length);
+		
+		
+		// If it is a UDP Reply, only send to the target
+		if(splitString.length > 2 
+				&& splitString[1].startsWith("reply")) {
+			int dest = Integer.valueOf(splitString[2]) - 100000;
+			try {
+				client.UDPSocket.send(createUDPDatagram(message, dest));
+				System.out.println("UDP reply Sent to " + dest);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} 
-		
+		}
+		else {
+			for(int i=start; i<=end; i++) {
+				if(i != client.UDPSocket.getLocalPort() && i != recv.getPort()) {
+					try {
+						client.UDPSocket.send(createUDPDatagram(message, i));
+						//System.out.println("Diustributed to : " + i);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			} 
+		}
 	}
-	
+
 
 
 

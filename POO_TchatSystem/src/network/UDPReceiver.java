@@ -66,7 +66,7 @@ public class UDPReceiver extends Thread{
 		 * TODO : Notify reply
 		 */
 		if(msg.startsWith(MessageCode.NOTIFY_JOIN)) {
-			String respMsg = MessageCode.NOTIFY_REPLY + (LocalSystemConfig.get_TCP_port());
+			String respMsg = MessageCode.NOTIFY_REPLY + (LocalSystemConfig.get_TCP_port() + MessageCode.SEP + srcPort);
 
 			//////////////////////////
 			//New connection, add TCP port to HashMap and send answer

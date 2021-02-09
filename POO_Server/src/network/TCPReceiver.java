@@ -51,7 +51,7 @@ public class TCPReceiver extends Thread{
 		
 		TCPSender.send(message, destPort);
 		
-		System.out.println("\"" + message + "\"" + "sent to " + destPort);
+		//System.out.println("\"" + message + "\"" + "sent to " + destPort);
 		
 	}
 

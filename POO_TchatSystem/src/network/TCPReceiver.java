@@ -38,7 +38,7 @@ public class TCPReceiver extends Thread{
 		
 		int srcPort = 0;
 		if(message.startsWith(MessageCode.FROM_SERVER)) {
-			System.out.println("Here : received tcp from server");
+			//System.out.println("Here : received tcp from server");
 			srcPort += 100000;
 			message = message.substring(MessageCode.FROM_SERVER.length());
 		}

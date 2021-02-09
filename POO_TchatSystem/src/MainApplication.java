@@ -1,20 +1,35 @@
 import java.sql.Time;
 import java.util.Scanner;
 
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
 import config.LocalSystemConfig;
 import database.Conversation;
 import gui.MainWindow;
 import network.NetworkManager;
 
 public class MainApplication {
+	
 
 	public static void main(String[] args) {
 		
-		System.out.println("Are you outside ? (y/n)");
-		Scanner askInside = new Scanner(System.in);
+		
+		boolean isInside = true;
+		
+		int result = JOptionPane.showConfirmDialog(null, new JLabel("Êtes-vous sur le réseau de l'entreprise ?"), "Réseau local ?", JOptionPane.YES_NO_OPTION);
+		if(result == JOptionPane.NO_OPTION) {isInside = false;}
 		
 		
-		LocalSystemConfig.initialize(askInside.nextLine().equals("y"));
+		LocalSystemConfig.initialize(!isInside);
+		
+		
 		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
 		
 		///////// GUI Version //////////
