@@ -3,9 +3,10 @@ package network;
 // Contains macros for message -> action correspondence
 public final class MessageCode {
 	
-	
+	// Separator (to separate informations in a message)
 	public static final String SEP = "#separator#"; //NOT A NUMBER OR CHAR
 	
+	// Code to notify that the message came from the server
 	public static final String FROM_SERVER = "#fromserver#"; //NOT A NUMBER OR CHAR
 	
 	//Discover codes

@@ -14,6 +14,11 @@ import java.util.Objects;
 import config.LocalSystemConfig;
 import tools.Pair;
 
+/**
+ * 
+ * Handle UDP messages received
+ *
+ */
 public class UDPReceiver extends Thread{
 
 	private DatagramSocket m_UDP_socket;
@@ -44,15 +49,20 @@ public class UDPReceiver extends Thread{
 
 		return new Pair<String, Integer>(message, srcPort);
 	}
-	
 
+	/**
+	 * Process a UDP message
+	 * @param recepted the message to process
+	 */
 	public void processMessage(Pair<String, Integer> recepted) {
 		String msg = recepted.getFirst();
 		int srcPort = recepted.getSecond();
 		int destinationPort = recepted.getSecond();
 		
+		//If the message comes from the presence server
 		if(srcPort == LocalSystemConfig.PRESENCE_SERVER_PORT) {
 			String extSrcPort = msg.split(MessageCode.SEP)[0];
+			//Src port is in the message, add 100 000
 			srcPort = Integer.valueOf(extSrcPort) + 100000;
 			msg = msg.substring(extSrcPort.length() + MessageCode.SEP.length());
 		}
@@ -61,30 +71,27 @@ public class UDPReceiver extends Thread{
 		Socket sock;
 		TCPReceiver tcpRecv;
 
-
-		/**
-		 * TODO : Notify reply
-		 */
+		//Join
 		if(msg.startsWith(MessageCode.NOTIFY_JOIN)) {
 			String respMsg = MessageCode.NOTIFY_REPLY + (LocalSystemConfig.get_TCP_port() + MessageCode.SEP + srcPort);
-
-			//////////////////////////
 			//New connection, add TCP port to HashMap and send answer
 			client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 			try {
-				//Notify that i'm here too
+				//Notify back that user is on the network
 				client.getM_sender().send(Sender.createUDPDatagram(respMsg, destinationPort));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
+		//Reply
 		else if (msg.startsWith(MessageCode.NOTIFY_REPLY)) {
-				client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
+			//Add port to the connected users list
+			client.getM_IP_Pseudo_Table().put(srcPort, LocalSystemConfig.UNKNOWN_USERNAME);
 
 		}
+		//Leave
 		else if (msg.startsWith(MessageCode.NOTIFY_LEAVE)) {
+			//Remove sender from the connected users list
 			client.getM_IP_Pseudo_Table().remove(srcPort);
 		}
 	}

@@ -10,10 +10,20 @@ import config.DatabaseConfig;
 import config.LocalSystemConfig;
 import tools.Pair;
 
+/**
+ * 
+ * Manage conversations (Retrieve from database, manage received messages, get conversations)
+ *
+ */
+
 public class ConversationManager {
 	
+	// The conversations list
 	ArrayList<Conversation> conversations;
 	
+	/**
+	 * Create and initialize a conversation manager (retrieve conversations from database)
+	 */
 	public ConversationManager() {
 		conversations = new ArrayList<Conversation>();
 		this.retreiveHistory();
@@ -34,22 +44,35 @@ public class ConversationManager {
 			
 		}
 		// If the conversation does not exists,
-		// we create it with destination = the message sender
+		// create it with destination = the message sender
 		Conversation newConv = new Conversation(port);
 		conversations.add(newConv);
 		return newConv;
 	}
 	
+	/**
+	 * Handle a received message (put it in the right conversation)
+	 * @param message the message to handle
+	 * @param srcPort the mesage sender port
+	 */
 	public void receive(String message, int srcPort) {
 		Conversation c = getConversation(srcPort);
 		c.addMessageToList(message, true);
 	}
 	
+	/**
+	 * Send a message to dstPort
+	 * @param message the message to send
+	 * @param dstPort the destination port
+	 */
 	public void send(String message, int dstPort) {
 		Conversation c = getConversation(dstPort);
 		c.send(message);
 	}
 	
+	/**
+	 * Retrieve conversations from the database
+	 */
 	public void retreiveHistory() {
 		String messagesQuery = 
 				  "SELECT * FROM "
@@ -88,7 +111,6 @@ public class ConversationManager {
 		
 		
 		try {
-			
 			while(sentSet.next()) {
 				src = sentSet.getInt(srcCol);
 				dst = sentSet.getInt(dstCol);
@@ -103,6 +125,7 @@ public class ConversationManager {
 			e.printStackTrace();
 		}
 		
+		//Process received messages
 		sentSet = DatabaseConfig.select(receivedMessageQuery);
 		try {
 			while(sentSet.next()) {
@@ -122,11 +145,15 @@ public class ConversationManager {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @return the conversations list
+	 */
 	public ArrayList<Conversation> getConversations() {
 		return conversations;
 	}
 
+	@Override
 	public String toString() {
 		String res = "";
 		for(Conversation c : conversations) {

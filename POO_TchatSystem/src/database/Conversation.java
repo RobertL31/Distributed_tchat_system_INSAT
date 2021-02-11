@@ -9,16 +9,27 @@ import config.LocalSystemConfig;
 import network.MessageCode;
 import network.Sender;
 
+/**
+ * 
+ * This class allows to store every informations about a conversation between two users
+ *
+ */
 public class Conversation {
-
+	
+	//Port of the first speaker (i.e the user)
 	private int sourceIP = LocalSystemConfig.get_TCP_port();
+	//Port of the second speaker
 	private int destIP;
-	//format: [(source port, destination port), (time, message)]
+	//Store messages list. (Message format: [(source port, destination port), (time, message)])
 	private ArrayList<Message> messages;
+	//The database connection (to insert / retrieve messages)
 	private Connection con;
 
 	
-	// Constructor for new conversation
+	/**
+	 * Create a new conversation from scratch 
+	 * @param destIP the port of the second speaker
+	 */
 	public Conversation(int destIP){
 		this.destIP = destIP;
 		this.messages = new ArrayList<>();
@@ -29,7 +40,11 @@ public class Conversation {
 		}
 	}
 
-	//Constructor for retreived conversation (from history)
+	/**
+	 * Create a new conversation from retrieved messages 
+	 * @param destIP the second speaker port
+	 * @param messages the list of retrieved messages
+	 */
 	public Conversation(int destIP, ArrayList<Message> messages) {
 		super();
 		this.destIP = destIP;
@@ -37,7 +52,7 @@ public class Conversation {
 	}
 	
 	/**
-	 * Insert a message in the @ArrayList @messages, adding the database Timestamp in Ms
+	 * Insert a message in the @ArrayList @messages, adding the database time in Ms
 	 * @param message the message to add
 	 * @param received True if the message comes from someone, false otherwise (the client is the sender)
 	 */
@@ -58,17 +73,17 @@ public class Conversation {
 				recvMsg = new Message(src, dst, msTime, message);
 				messages.add(recvMsg);
 				rsTimestamp.close();
-				
-				//TEST TODO REMOVE
-				if(received)System.out.println(recvMsg);
-				///////////////////////////
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.err.println("Cannot get time from database, message not added");
 		}
 		return recvMsg;
 	}
 	
+	/**
+	 * Insert a message in the @ArrayList @messages
+	 * @param m the message to insert
+	 */
 	public void addMessageToList(Message m) {
 		long m_time = m.getTime();
 		long c_time;
@@ -83,31 +98,52 @@ public class Conversation {
 		messages.add(m);
 		return;
 	}
-
+	
+	/**
+	 * 
+	 * @return the second speaker port
+	 */
 	public int getDestIP() {
 		return destIP;
 	}
-
+	
+	/**
+	 * Set the second speaker port
+	 * @param destIP the port to set
+	 */
 	public void setDestIP(int destIP) {
 		this.destIP = destIP;
 	}
-
+	
+	/**
+	 * 
+	 * @return the first speaker port
+	 */
 	public int getSourceIP() {
 		return sourceIP;
 	}
-
+	
+	/**
+	 * 
+	 * @return the list of messages sent between the two speakers
+	 */
 	public ArrayList<Message> getMessages() {
 		return messages;
 	}
 
+	/**
+	 * Send a message to the second speaker (destIP port)
+	 * @param message the message to send
+	 * @return the message if successfully sent, null otherwise
+	 */
 	public Message send(String message){
 		String toSend =   	  MessageCode.PRIVATE_MESSAGE
 				+ LocalSystemConfig.get_TCP_port()
 				+ MessageCode.SEP
 				+ message;
 
-		// message sended => add to database
 		if(Sender.send(toSend, destIP)){
+			//If the message have been sent, add it to the database
 			String addToDB = 
 					"INSERT INTO "
 							+ DatabaseConfig.DB_TABLE_NAME

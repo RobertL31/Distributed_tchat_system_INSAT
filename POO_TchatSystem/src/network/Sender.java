@@ -16,9 +16,15 @@ import com.mysql.cj.xdevapi.Client;
 
 import config.LocalSystemConfig;
 
+/**
+ * 
+ * Provide tools to send UDP / TCP messages
+ *
+ */
 public class Sender {
-
+	// The UDP Socket to consider
 	private DatagramSocket m_UDP_socket;
+	// The user network manager 
 	private NetworkManager client;
 
 	public Sender() {
@@ -26,11 +32,24 @@ public class Sender {
 		this.client = LocalSystemConfig.getNetworkManagerInstance();
 	}
 
+	/**
+	 * Create a datagram packet
+	 * @param message the message to include in the datagram
+	 * @param port the destination port
+	 * @return the built datagram packet
+	 * @throws IOException
+	 */
 	public static DatagramPacket createUDPDatagram(String message, int port) throws IOException {
 		byte[] buff = message.getBytes();
 		return new DatagramPacket(buff, buff.length, InetAddress.getLocalHost(), port);
 	}
 
+	/**
+	 * Send a TCP message 
+	 * @param msg the message to send
+	 * @param port the destination port
+	 * @return true if the message have been sent, false otherwise
+	 */
 	public static boolean send(String msg, int port){
 		Socket sock;
 		int dstPort = port;
@@ -55,6 +74,10 @@ public class Sender {
 	}
 
 	@SuppressWarnings("unchecked")
+	/**
+	 * Send a request to change pseudo
+	 * @return true if the pseudo have been granted
+	 */
 	public boolean sendPseudoRequest() {
 		//Send chosen pseudo to all the network
 		//Clone the HashMap to avoid modifications conflicts during forEach
@@ -67,14 +90,16 @@ public class Sender {
 					+ client.getPseudo();
 			Sender.send(message, port);
 		});
-
+		
 		try {
+			//Wait for answer (True / False)
 			Thread.sleep(LocalSystemConfig.SLEEP_TIME);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
 		if(client.isValidPseudo()) {
+			//If the pseudo have been granted, tell everyone chosen pseudo
 			users = (HashMap<Integer, String>) client.getM_IP_Pseudo_Table().clone();
 			users.forEach((port, pseudo) -> 
 			{
@@ -91,8 +116,11 @@ public class Sender {
 
 	}
 
+	/**
+	 * Send a datagram packet
+	 * @param p the datagram packet to send
+	 */
 	public void send(DatagramPacket p) {
-
 		try {
 			m_UDP_socket.send(p);
 		} catch (IOException e) {
