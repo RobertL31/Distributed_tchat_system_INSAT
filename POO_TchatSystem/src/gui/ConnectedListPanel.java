@@ -1,16 +1,12 @@
 package gui;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,16 +15,29 @@ import config.GUIConfig;
 import config.LocalSystemConfig;
 import database.Conversation;
 
+/**
+ * 
+ * Panel corresponding to the connected user list (on MainWindow left side)
+ *
+ */
 @SuppressWarnings("serial")
 public class ConnectedListPanel extends JPanel{
 
+	// Make it scrollable (>6 users)
 	private JScrollPane scrollPane;
+	// Store JLabel corresponding to usernames (GUI)
 	private JPanel listPanel;
+	// Store connected users (no GUI)
 	private ArrayList<User> connectedList;
+	// Current ConversationPanel
 	private ConversationPanel conversationPanel;
+	// Timer to schedule the list update
 	private Timer timer;
 
-
+	/**
+	 * Create a ConnectedListPanel
+	 * @param conversationPanel the MainWindow ConversationPanel
+	 */
 	public ConnectedListPanel(ConversationPanel conversationPanel) {
 		super();		
 		this.conversationPanel = conversationPanel;
@@ -48,11 +57,14 @@ public class ConnectedListPanel extends JPanel{
 			public void run() {
 				reloadList();
 			}
-		}, 0, 250);
+		}, 0, GUIConfig.RLD_TIME_CONNECTED_LIST);
 
 
 	}
-
+	
+	/**
+	 * Reload the list of connected users (GUI)  
+	 */
 	public void reloadList() {
 		if(!LocalSystemConfig.getNetworkManagerInstance().getPseudo().equals(LocalSystemConfig.UNKNOWN_USERNAME)) {
 			ArrayList<Integer> actualizedList = new ArrayList<Integer>(LocalSystemConfig.getNetworkManagerInstance().getM_IP_Pseudo_Table().keySet());
@@ -99,7 +111,7 @@ public class ConnectedListPanel extends JPanel{
 					
 					connectedList.add(newUser);
 					listPanel.add(newUser);
-					
+					//Put it at the end
 					newUser.setBounds(0, connectedList.size()*GUIConfig.USR_PANEL_H, GUIConfig.USR_PANEL_W, GUIConfig.USR_PANEL_H);
 					
 				}

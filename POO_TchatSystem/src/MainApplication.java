@@ -1,17 +1,6 @@
-import java.sql.Time;
-import java.util.Scanner;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
 import config.LocalSystemConfig;
-import database.Conversation;
 import gui.MainWindow;
 import network.NetworkManager;
 
@@ -23,7 +12,7 @@ public class MainApplication {
 		
 		boolean isInside = true;
 		
-		// Popup asking the user if he is inside or outside the company network
+		// Pop-up asking the user if he is inside or outside the company network
 		int result = JOptionPane.showConfirmDialog(null, new JLabel("Êtes-vous sur le réseau de l'entreprise ?"), "Réseau local ?", JOptionPane.YES_NO_OPTION);
 		if(result == JOptionPane.NO_OPTION) {isInside = false;}
 		
@@ -34,6 +23,7 @@ public class MainApplication {
 		NetworkManager client = LocalSystemConfig.getNetworkManagerInstance();
 		
 		// Initialize GUI
+		@SuppressWarnings("unused") //No need to use it
 		MainWindow app = new MainWindow();
 		
 		System.out.println("[UDP] Listening on " + LocalSystemConfig.get_UDP_port());
@@ -42,6 +32,8 @@ public class MainApplication {
 		client.discoverNetwork();
 		
 		while(true);
+		
+		
 
 	}
 

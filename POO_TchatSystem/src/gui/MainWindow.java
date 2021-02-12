@@ -2,17 +2,20 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-
 import config.GUIConfig;
 import config.LocalSystemConfig;
 import network.NetworkManager;
 
+/**
+ * 
+ * Main window of the application
+ *
+ */
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame{
 
 	
@@ -23,7 +26,9 @@ public class MainWindow extends JFrame{
 	ConversationPanel conversationP;
 	ConnectedListPanel listP;
 	
-	
+	/**
+	 * Create a MainWindow
+	 */
 	public MainWindow() {
 		super();
 		this.client = LocalSystemConfig.getNetworkManagerInstance();
@@ -34,15 +39,9 @@ public class MainWindow extends JFrame{
 		setVisible(true);
 	}
 	
-	public void test() {
-		listP.reloadList();
-	}
-	
-	public void test2() {
-		conversationP.updateConversation();
-	}
-	
-	
+	/**
+	 * Initialize all the MainWindow components needed (PseudoPanel, ConversationPanel, ConnectedListPanel)
+	 */
 	public void initComponents() {
 		
 		pseudoP = new PseudoPanel();
@@ -62,6 +61,9 @@ public class MainWindow extends JFrame{
 		});
 	}
 	
+	/**
+	 * Close the GUI and kill the application
+	 */
 	private void exitProgram() {
 		this.dispose();
 		client.disconnect();

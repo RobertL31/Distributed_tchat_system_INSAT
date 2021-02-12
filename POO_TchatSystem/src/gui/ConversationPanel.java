@@ -1,31 +1,24 @@
 package gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 
 import config.GUIConfig;
@@ -33,32 +26,42 @@ import config.LocalSystemConfig;
 import database.Conversation;
 import database.Message;
 
+/**
+ * 
+ * ConversationPanel (MainWindow right side), provides : read / send messages
+ *
+ */
 @SuppressWarnings("serial")
 public class ConversationPanel extends JPanel implements ActionListener{
 
+	// The conversation to display
 	private Conversation conversation;
 	private JPanel shownMessagePanel;
+	// Make it scrollable
 	private JScrollPane messageScrollPane;
+	// To check if day . month have already been displayed
 	private long lastMessageTime;
 	
-	//to update
+	// To schedule GUI update
 	private Timer timer;
+	// To check new messages or not
 	private int displayedMessagesNb;
 
+	// Panel to send message (TextArea + send Button)
 	private JPanel sendMessagePanel;
 	private JTextArea messageTextArea;
 	private JScrollPane messageAreaScrollPane;
 	private JButton sendButton;
 
-	private final int coeff = 20;
-
-
+	/**
+	 * Create a Conversation Panel
+	 */
 	public ConversationPanel() {
 		super();
 		
 		this.setPreferredSize(GUIConfig.CONV_PANEL_DIM);
 		
-		//to update
+		//to update GUI
 		lastMessageTime = 0;
 		displayedMessagesNb = 0;
 		
@@ -103,31 +106,41 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		this.add(sendMessagePanel);
 		
 	}
-
+	
+	/**
+	 * Set and load a conversation to the panel
+	 * @param c the conversation to set
+	 */
 	public void setConversation(Conversation c) {
 		this.conversation = c;
 		loadConversation();
 	}
 	
+	/**
+	 * 
+	 * @return the displayed conversation
+	 */
 	public Conversation getConversation() {
 		return conversation;
 	}
 	
-	
-
+	/**
+	 * 
+	 * @return the shown messagePanel
+	 */
 	public JPanel getShownMessagePanel() {
 		return shownMessagePanel;
 	}
 
-	public void setShownMessagePanel(JPanel shownMessagePanel) {
-		this.shownMessagePanel = shownMessagePanel;
-	}
-
-	//\n tous les 30 caractères 
+	/**
+	 * Decompose a String in parts (to put '\n' between each cells)
+	 * @param message the message to parse
+	 * @return an array of the decomposed message
+	 */
 	public ArrayList<String> parser(String message) {
 		int cnt=0;
 		String tmpLine="";
-		String[] splited = message.split("[\\s]");
+		String[] splited = message.split("[\\s]"); //Split on ' ' (blank space) to get words
 		ArrayList<String> res = new ArrayList<String>();
 		for(String s : splited) {
 			if(s.length() >= GUIConfig.MAX_CHAR_PER_LINE) {
@@ -152,10 +165,13 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		return res;
 	}
 	
+	/**
+	 * Display a message in the conversation panel
+	 * @param m the message to display
+	 */
 	private void addMessage(Message m) {
-		
-		
-		////////////// Show date every new Day //////////////
+
+		////////////// Show date (Day / Month) every new Day (Once per day) //////////////
 		Calendar lastMessageCalendar = Calendar.getInstance();
 		lastMessageCalendar.setTimeInMillis(lastMessageTime);
 		int lDay, lMonth, lYear;
@@ -203,6 +219,7 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		}
 		finalMessage += "</html>";
 		
+		//Set the message color according to the sender / receiver
 		Color c = (m.getSrc()==LocalSystemConfig.get_TCP_port())?Color.BLUE:(new Color(0, 153, 0));
 		
 		JLabel l = new JLabel(finalMessage);
@@ -213,7 +230,10 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		JScrollBar sb = messageScrollPane.getVerticalScrollBar();
 		sb.setValue(sb.getMaximum());
 	}
-
+	
+	/**
+	 * Load the current conversation
+	 */
 	public void loadConversation() {
 		lastMessageTime = 0;
 		displayedMessagesNb = 0;
@@ -223,6 +243,9 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		updateUI();
 	}
 	
+	/**
+	 * Update the conversation (GUI)
+	 */
 	public void updateConversation() {
 		@SuppressWarnings("unchecked")
 		ArrayList<Message> allMessages = (ArrayList<Message>) conversation.getMessages().clone();
@@ -239,7 +262,9 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		updateUI();
 	}
 
-
+	/**
+	 * Send the TextArea message on click on sendButton
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		Object performer = evt.getSource();

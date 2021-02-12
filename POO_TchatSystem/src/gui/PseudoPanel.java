@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,14 +12,25 @@ import javax.swing.JTextField;
 import config.GUIConfig;
 import config.LocalSystemConfig;
 
+/**
+ * 
+ * PseudoPanel (Top Middle of the MainWindow)
+ *
+ */
+@SuppressWarnings("serial")
 public class PseudoPanel extends JPanel implements ActionListener{
-	private GridLayout grid;
+	// Area to type the user pseudo
 	private JTextField input;
+	// To send the pseudo request
 	private JButton sendButton;
-	private ActionListener sendButtonListener;
+	// Placeholder
 	private JLabel placeholder;
+	// To display the current pseudo
 	private JLabel actualPseudo;
 	
+	/**
+	 * Create a PseudoPanel
+	 */
 	public PseudoPanel() {
 		super();
 		setSize(GUIConfig.PSEUDO_PANEL_DIM);
@@ -36,12 +46,20 @@ public class PseudoPanel extends JPanel implements ActionListener{
 		add(actualPseudo);
 	}
 	
+	/**
+	 * Check if a given pseudo is valid (>= Minimum Length, <= Maximum Length, only allowed chars)
+	 * @param pseudo the pseudo to check
+	 * @return true if the pseudo is valid, false otherwise
+	 */
 	private boolean checkPseudo(String pseudo) {
 		return pseudo.length() >= GUIConfig.MIN_PSEUDO_LEN 
 				&& pseudo.length() <= GUIConfig.MAX_PSEUDO_LEN
 				&& pseudo.matches("[A-Za-z0-9_]+"); //Allow alphanumeric char only
 	}
 
+	/**
+	 * Event Handler, to initiate the change pseudo process on click on sendButton
+	 */
 	@Override
 	public void actionPerformed(ActionEvent evt) {
 		Object performer = evt.getSource();
@@ -65,6 +83,3 @@ public class PseudoPanel extends JPanel implements ActionListener{
 		}
 	}
 }
-
-
-//Pseudo : [   INPUT FIELD    ] (Boutton)

@@ -173,6 +173,10 @@ public class Conversation {
 		return res;
 	}
 
+	public Connection getCon() {
+		return con;
+	}
+
 
 
 }

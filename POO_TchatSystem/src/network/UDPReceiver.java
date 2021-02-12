@@ -3,14 +3,7 @@ package network;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyPair;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-
 import config.LocalSystemConfig;
 import tools.Pair;
 
@@ -62,15 +55,10 @@ public class UDPReceiver extends Thread{
 		//If the message comes from the presence server
 		if(srcPort == LocalSystemConfig.PRESENCE_SERVER_PORT) {
 			String extSrcPort = msg.split(MessageCode.SEP)[0];
-			//Src port is in the message, add 100 000
+			//Source port is in the message, add 100 000
 			srcPort = Integer.valueOf(extSrcPort) + 100000;
 			msg = msg.substring(extSrcPort.length() + MessageCode.SEP.length());
 		}
-
-		//for TCP communications//
-		Socket sock;
-		TCPReceiver tcpRecv;
-
 		//Join
 		if(msg.startsWith(MessageCode.NOTIFY_JOIN)) {
 			String respMsg = MessageCode.NOTIFY_REPLY + (LocalSystemConfig.get_TCP_port() + MessageCode.SEP + srcPort);

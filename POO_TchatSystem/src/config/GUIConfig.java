@@ -5,6 +5,9 @@ import java.awt.Dimension;
 
 public class GUIConfig {
 	
+	// Reload Times (in ms)
+	public static final int RLD_TIME_CONNECTED_LIST = 250;
+	
 	// Text
 	public static final String APP_NAME = "ClavardApp";
 	public static final String PSEUDO_BUTTON_TXT = "Valider";

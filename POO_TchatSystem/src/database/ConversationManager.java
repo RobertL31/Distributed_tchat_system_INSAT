@@ -2,13 +2,11 @@ package database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import config.DatabaseConfig;
 import config.LocalSystemConfig;
-import tools.Pair;
 
 /**
  * 

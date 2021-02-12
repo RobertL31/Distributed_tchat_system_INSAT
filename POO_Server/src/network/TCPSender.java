@@ -5,10 +5,19 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-
+/**
+ * 
+ * Tool to send a message thought TCP
+ *
+ */
 public class TCPSender {
 	
-	
+	/**
+	 * Send a TCP message
+	 * @param msg the message to send 
+	 * @param port the destination port
+	 * @return true if the message have been sent, false otherwise
+	 */
 	public static boolean send(String msg, int port){
 		Socket sock;
 		try {

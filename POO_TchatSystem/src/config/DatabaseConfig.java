@@ -65,7 +65,7 @@ public final class DatabaseConfig {
 	public static void insert(String stmContent){
 		try {
 			Statement statement = con.createStatement();
-			int added = statement.executeUpdate(stmContent);
+			statement.executeUpdate(stmContent);
 			statement.close();
 			} catch (SQLException e) {
 			// TODO Auto-generated catch block

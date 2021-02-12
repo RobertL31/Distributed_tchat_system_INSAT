@@ -1,5 +1,11 @@
 package tools;
-
+/**
+ * 
+ * Store pair values
+ *
+ * @param <K> the first value (Key)
+ * @param <V> the associated value (Value)
+ */
 public class Pair<K, V> {
 
     private final K fst;

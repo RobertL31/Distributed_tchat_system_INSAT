@@ -5,17 +5,18 @@ package network;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
-
+/**
+ * 
+ * Redirect a TCP message
+ * 
+ */
 public class TCPReceiver extends Thread{
 
 	private NetworkManager client;
 	private Socket listeningSocket;
 	
-	public static final String SEP = "#separator#"; //NOT A NUMBER OR CHAR
-	public static final String FROM_SERVER = "#fromserver#"; //NOT A NUMBER OR CHAR
+
 
 	TCPReceiver(NetworkManager client, Socket listeningSocket){
 		this.client = client;
@@ -37,28 +38,30 @@ public class TCPReceiver extends Thread{
 		return msg;
 	}
 
+	/**
+	 * Redirect the message
+	 * @param message to redirect
+	 */
 	private void processMessage(String message) {
 		if(message == null) return;
 		
-		String[] separated = message.split(SEP);
+		String[] separated = message.split(Config.SEP);
 		System.out.println(message);
 		int destPort = Integer.valueOf(separated[0]);
 		
 		//  Dest SEP Message
-		message = message.substring(message.indexOf(SEP) + SEP.length());
-		message = FROM_SERVER + message;
+		message = message.substring(message.indexOf(Config.SEP) + Config.SEP.length());
+		message = Config.FROM_SERVER + message;
 		
 		
 		TCPSender.send(message, destPort);
-		
-		//System.out.println("\"" + message + "\"" + "sent to " + destPort);
 		
 	}
 
 	public void run() {
 		String msg = receive();
 		processMessage(msg);
-		//Once the message processed, close socket + stop thread
+		//Once the message is processed, close socket + stop thread
 		try {
 			listeningSocket.close();
 		} catch (IOException e) {
@@ -66,5 +69,10 @@ public class TCPReceiver extends Thread{
 			e.printStackTrace();
 		}
 		
+	}
+
+
+	public NetworkManager getClient() {
+		return client;
 	}
 }
