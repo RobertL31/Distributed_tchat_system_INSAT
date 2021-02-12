@@ -28,7 +28,8 @@ public class MainApplication {
 		
 		System.out.println("[UDP] Listening on " + LocalSystemConfig.get_UDP_port());
 		System.out.println("[TCP] Listening on " + LocalSystemConfig.get_TCP_port());
-
+		
+		
 		client.discoverNetwork();
 		
 		while(true);

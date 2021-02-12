@@ -72,6 +72,9 @@ public class ConversationManager {
 	 * Retrieve conversations from the database
 	 */
 	public void retreiveHistory() {
+		
+		int localPort = LocalSystemConfig.get_TCP_port();
+		int localPortExt = localPort+100000;
 		String messagesQuery = 
 				  "SELECT * FROM "
 				+ DatabaseConfig.DB_TABLE_NAME
@@ -79,11 +82,11 @@ public class ConversationManager {
 		String sentMessageQuery = 
 				messagesQuery
 				+ "source=" 
-				+ LocalSystemConfig.get_TCP_port();
+				+ localPort + "|| source=" + localPortExt ;
 		String receivedMessageQuery = 
 				messagesQuery
 				+ "dest=" 
-				+ LocalSystemConfig.get_TCP_port();
+				+ localPort + "|| dest=" + localPortExt;
 		
 		//Variables to store messages informations
 		int src, dst, srcCol, dstCol, contentCol, dateCol;
@@ -132,6 +135,14 @@ public class ConversationManager {
 				content = sentSet.getString(contentCol);
 				date = sentSet.getTimestamp(dateCol);
 				msTime = date.getTime();
+				
+				
+				
+				if(dst >= 100000) {
+					dst -= 100000;
+					src += 100000;
+				}
+				
 				toAdd = new Message(src, dst, msTime, content);
 				getConversation(src).addMessageToList(toAdd);
 			}

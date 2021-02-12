@@ -3,6 +3,7 @@ package config;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
+import java.util.ResourceBundle;
 
 import network.NetworkManager;
 
@@ -40,16 +41,17 @@ public final class LocalSystemConfig {
 	// Default pseudo (choose this pseudo is forbidden)
 	public static final String UNKNOWN_USERNAME = "/uknw";
 	
+	private static ResourceBundle bundle = ResourceBundle.getBundle("properties.config");
 	
 	// Internal users / Broadcast start port range 
-	public static int START_PORT = 65000;
+	public static int START_PORT = Integer.valueOf(bundle.getString("pr.start_port"));
 	// Internal users / Broadcast end port range
-	public static int END_PORT = 65100;
+	public static int END_PORT = Integer.valueOf(bundle.getString("pr.end_port"));
 	
 	// External users start port range
-	public static final int START_PORT_EXT = 64000;
+	public static final int START_PORT_EXT = Integer.valueOf(bundle.getString("pr.start_port_ext"));
 	// External users end port range
-	public static final int END_PORT_EXT = 64999;
+	public static final int END_PORT_EXT = Integer.valueOf(bundle.getString("pr.end_port_ext"));
 	
 	// Time waiting for pseudo_request answer (in ms)
 	public static final int SLEEP_TIME = 300;
@@ -58,7 +60,7 @@ public final class LocalSystemConfig {
 	public static final int UDP_MESSAGE_MAXLENGTH = 256;
 	
 	// Presence server listening port
-	public static final int PRESENCE_SERVER_PORT = 65000;
+	public static final int PRESENCE_SERVER_PORT = Integer.valueOf(bundle.getString("pr.presence_server"));
 
 	public static DatagramSocket m_UDP_socket = null;
 	public static ServerSocket m_TCP_socket = null;	
@@ -70,7 +72,7 @@ public final class LocalSystemConfig {
 	public static void openUDPServer() {
 		
 		//For internal users
-		int start_port = START_PORT+1; // +1 to avoid the presence server port
+		int start_port = START_PORT; 
 		int end_port = END_PORT;
 		
 		//If the user is not inside the company

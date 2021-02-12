@@ -5,20 +5,22 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ResourceBundle;
 
 public final class DatabaseConfig {
 	
+	private static ResourceBundle bundle = ResourceBundle.getBundle("properties.config");
 	//Database username
-	public static final String DB_USR = "tp_servlet_004";
+	public static final String DB_USR = bundle.getString("db.usr");
 	
 	//Database Password
-	public static final String DB_PSW = "Ua2wae0g";
+	public static final String DB_PSW = bundle.getString("db.pswd");
 	
 	//Database url
-	public static final String DB_URL = "jdbc:mysql://srv-bdens.insa-toulouse.fr/tp_servlet_004";
+	public static final String DB_URL = bundle.getString("db.url");
 	
 	//Database table name
-	public static final String DB_TABLE_NAME = "Messages";
+	public static final String DB_TABLE_NAME = bundle.getString("db.table");
 	
 	//Query to get Databse Time
 	public static final String DB_SELECT_TIME = "SELECT CURRENT_TIMESTAMP";

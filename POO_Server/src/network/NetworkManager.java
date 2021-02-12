@@ -25,8 +25,8 @@ public class NetworkManager {
 	public NetworkManager() {
 		super();
 		try {
-			TCPServer = new ServerSocket(65000);
-			UDPSocket = new DatagramSocket(65000);
+			TCPServer = new ServerSocket(Config.LISTENING_PORT);
+			UDPSocket = new DatagramSocket(Config.LISTENING_PORT);
 			UDPrecv = new UDPReceiver(this);
 			tcpAccepter = new TCPAccepter(this);
 		} catch (IOException e) {

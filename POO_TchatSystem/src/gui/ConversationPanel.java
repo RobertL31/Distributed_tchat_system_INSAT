@@ -138,30 +138,22 @@ public class ConversationPanel extends JPanel implements ActionListener{
 	 * @return an array of the decomposed message
 	 */
 	public ArrayList<String> parser(String message) {
-		int cnt=0;
 		String tmpLine="";
-		String[] splited = message.split("[\\s]"); //Split on ' ' (blank space) to get words
+		boolean endOnAdd = false;
 		ArrayList<String> res = new ArrayList<String>();
-		for(String s : splited) {
-			if(s.length() >= GUIConfig.MAX_CHAR_PER_LINE) {
-				int parts = (s.length() / GUIConfig.MAX_CHAR_PER_LINE)+1;
-				for(int i=0; i<parts-1; ++i) {
-					res.add(s.substring(i*GUIConfig.MAX_CHAR_PER_LINE, (i+1)*GUIConfig.MAX_CHAR_PER_LINE));
-				}
-				res.add(s.substring((parts-1)*GUIConfig.MAX_CHAR_PER_LINE));
-			}
-			else if(s.length() + cnt + 1 <= GUIConfig.MAX_CHAR_PER_LINE) {
-				cnt += s.length()+1;
-				tmpLine += s + " ";
+		char[] marray = message.toCharArray();
+		for(int i=0; i<marray.length; i++){
+			if((i+1)%GUIConfig.MAX_CHAR_PER_LINE == 0) {
+				res.add(tmpLine);
+				tmpLine = "";
+				endOnAdd = true;
 			}
 			else {
-				res.add(tmpLine);
-				cnt=0;
+				tmpLine += marray[i];
+				endOnAdd = false;
 			}
 		}
-		if(cnt <= GUIConfig.MAX_CHAR_PER_LINE) {
-			res.add(tmpLine);
-		}
+		if(!endOnAdd) {res.add(tmpLine);}
 		return res;
 	}
 	
@@ -210,12 +202,11 @@ public class ConversationPanel extends JPanel implements ActionListener{
 		
 		String srcPseudo = LocalSystemConfig.getNetworkManagerInstance().getPseudoFromPort(m.getSrc());
 		
-		String tab = "&nbsp;".repeat(2*(8+srcPseudo.length()));
 		String finalMessage="<html>" 
 				+ "[" + ft.format(new Date(m.getTime())) + "] "
 				+ srcPseudo + ": ";
 		for(String s : parsedMessage) {
-			finalMessage+=s + "<br/>" + tab;
+			finalMessage+=s + "<br/>";
 		}
 		finalMessage += "</html>";
 		

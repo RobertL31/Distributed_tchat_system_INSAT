@@ -56,6 +56,6 @@ public class GUIConfig {
 	public static final int MTA_CONV_PANEL_H = 4*MA_CONV_PANEL_H/5;
 	public static final Dimension MTA_CONV_PANEL_DIM = new Dimension(MTA_CONV_PANEL_W, MTA_CONV_PANEL_H);
 	
-	public static final int MAX_CHAR_PER_LINE = 40;
+	public static final int MAX_CHAR_PER_LINE = 100;
 	
 }

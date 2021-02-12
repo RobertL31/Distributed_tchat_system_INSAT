@@ -46,7 +46,7 @@ public class TCPReceiver extends Thread{
 		if(message == null) return;
 		
 		String[] separated = message.split(Config.SEP);
-		System.out.println(message);
+		System.out.println("[TCP]" + message);
 		int destPort = Integer.valueOf(separated[0]);
 		
 		//  Dest SEP Message

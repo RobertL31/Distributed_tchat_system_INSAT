@@ -144,6 +144,7 @@ public class Conversation {
 
 		if(Sender.send(toSend, destIP)){
 			//If the message have been sent, add it to the database
+			
 			String addToDB = 
 					"INSERT INTO "
 							+ DatabaseConfig.DB_TABLE_NAME

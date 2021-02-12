@@ -165,6 +165,12 @@ public class NetworkManager {
 				}
 			}
 		}
+		//send to the presence server
+		try {
+			m_sender.send(Sender.createUDPDatagram(message, LocalSystemConfig.PRESENCE_SERVER_PORT));
+		} catch (IOException e) {
+			System.err.println("Cannot send UDP to Presence server, external users will be ignored");
+		}
 	}
 
 	/**

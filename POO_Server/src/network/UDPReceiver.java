@@ -48,8 +48,7 @@ public class UDPReceiver extends Thread{
 		// Remove unused bytes (because buffer size >= data transmitted size)
 		message = message.substring(0, recv.getLength());
 		message = senderPort + Config.SEP + message;
-
-
+		System.out.println("[UDP]" + message);
 		int start;
 		int end;		
 		//External user : send to everyone (EXT + IN)
