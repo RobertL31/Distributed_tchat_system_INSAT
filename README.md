@@ -1,4 +1,7 @@
-#Important : Si vous souhaitez lancer le projet TchatSystem depuis Eclipse, il se peut que vous ayiez à ré-ajouter le mysql_connector (présent dans les sources) au build_path.
+Important
+====================
+
+Si vous souhaitez lancer le projet TchatSystem depuis Eclipse, il se peut que vous ayiez à ré-ajouter le mysql_connector (présent dans les sources) au build_path.
 
 Manuel d’utilisation
 ====================
