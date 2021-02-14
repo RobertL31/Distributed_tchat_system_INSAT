@@ -7,8 +7,6 @@ public class Main {
 		
 		manager.init();
 		
-		System.out.println("Server launched !");
-		
 		while(true);
 	}
 

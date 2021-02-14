@@ -44,9 +44,9 @@ public final class LocalSystemConfig {
 	private static ResourceBundle bundle = ResourceBundle.getBundle("properties.config");
 	
 	// Internal users / Broadcast start port range 
-	public static int START_PORT = Integer.valueOf(bundle.getString("pr.start_port"));
+	public static int START_PORT = Integer.valueOf(bundle.getString("pr.start_port_in"));
 	// Internal users / Broadcast end port range
-	public static int END_PORT = Integer.valueOf(bundle.getString("pr.end_port"));
+	public static int END_PORT = Integer.valueOf(bundle.getString("pr.end_port_in"));
 	
 	// External users start port range
 	public static final int START_PORT_EXT = Integer.valueOf(bundle.getString("pr.start_port_ext"));
